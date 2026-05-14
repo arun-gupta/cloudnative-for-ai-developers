@@ -1,0 +1,73 @@
+site_name: Cloud Native for AI Developers
+site_description: A pain-first translation guide between cloud native and AI development
+site_url: https://arun-gupta.github.io/cloudnative-for-ai-developers/
+repo_url: https://github.com/arun-gupta/cloudnative-for-ai-developers
+repo_name: arun-gupta/cloudnative-for-ai-developers
+edit_uri: edit/main/
+
+docs_dir: .
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - content.code.copy
+    - content.action.edit
+  palette:
+    - scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: README.md
+  - Pains:
+      - Foundation:
+          - 'Model works locally, breaks in prod': pains/01-model-works-locally.md
+      - Compute:
+          - 'GPU job crashed at hour 14': pains/02-gpu-job-crashed.md
+          - "Can't get a GPU when I need one": pains/03-cant-get-a-gpu.md
+          - 'Multi-node training keeps falling over': pains/04-multi-node-training.md
+      - Serving:
+          - 'Cold start for my 70B model': pains/05-cold-start.md
+          - 'GPU at 30% but bill says 100%': pains/06-gpu-underutilized.md
+          - "Can't roll back without downtime": pains/07-cant-roll-back.md
+          - "Latency spiked, can't tell why": pains/08-latency-spiked.md
+      - Operations:
+          - 'Costs out of control': pains/09-costs-out-of-control.md
+      - Governance:
+          - 'Prompt version in prod': pains/10-prompt-version.md
+      - Compliance:
+          - "Data can't leave their region": pains/11-data-residency.md
+  - Reference:
+      - 'Rosetta table': reference/rosetta-table.md
+      - "Where CN doesn't help": reference/where-cn-doesnt-help.md
+      - 'What not to translate': reference/what-not-to-translate.md
+      - 'Reading path': reference/reading-path.md
+  - Examples: examples/README.md
+  - Contributing: CONTRIBUTING.md
+
+exclude_docs: |
+  /LICENSE
+  /.github/
+  /mkdocs.yml

@@ -25,9 +25,9 @@ The model: `sentence-transformers/all-MiniLM-L6-v2`. About 22MB. The app exposes
 
 `before/app.py` and `after/app.py` are byte-for-byte identical. So are `requirements.txt`. **Going cloud native is not rewriting your code; it's wrapping it.** The Dockerfile is the entire delta.
 
-## Before you read the Dockerfile: look at your own mess
+## See what your environment actually carries
 
-Paste this into a terminal. Five seconds. It surfaces the laptop state your "before" deployment depends on without you realizing.
+Before reading the Dockerfile, run this on your laptop. It prints the Python installs, HuggingFace cache, and relevant environment variables currently on your system. Whatever it shows is what your `before/` deployment quietly depends on.
 
 ```bash
 echo "=== Pythons on PATH ==="; which -a python python3 2>/dev/null | sort -u
@@ -36,9 +36,7 @@ echo "=== HuggingFace cache ==="; du -sh "${HF_HOME:-$HOME/.cache/huggingface}" 
 echo "=== Relevant env vars ==="; env | grep -E '^(CUDA|HF_|TRANSFORMERS_|TORCH_|LD_LIBRARY)' | sort
 ```
 
-You'll likely see: two or three Pythons (one of which is "active" and isn't the one your editor uses), a multi-gigabyte HF cache full of models you don't remember downloading, and a handful of env vars baked into your shell that don't exist anywhere prod can see.
-
-None of this ships with `git push`.
+Common things this surfaces: multiple Python installs (the "active" one is often not the one your editor uses), a multi-gigabyte HuggingFace cache shared across projects, and env vars baked into your shell that won't exist on a prod VM. None of this is captured by `git push`. The Dockerfile is one way to make it explicit.
 
 ## Run the two versions
 

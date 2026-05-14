@@ -25,7 +25,7 @@ The shift, in one line: invoke less, declare more.
 Eleven pains, sequenced from foundation to compliance.
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph S1[1 Foundation]
         N1[Model breaks in prod]
     end

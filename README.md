@@ -6,23 +6,9 @@ This guide is that vocabulary, pain-first. Each pain starts with a problem you'v
 
 What this guide is not: a Kubernetes tutorial. There are 500 of those. This is a translation between two worlds that increasingly need each other, with an honest accounting of where the translation runs out.
 
-## The mental model shift
-
-Before any specific primitive, the reframe:
-
-| From (your world) | To (cloud native) | The shift |
-|---|---|---|
-| Notebook kernel on your laptop | Pod: ephemeral, scheduled, identical to N others | Compute is interchangeable |
-| `python serve.py` (an invocation) | Deployment: declared state of N replicas, platform keeps it true | Imperative becomes declarative |
-| Local file on a disk you own | Volume: survives the pod, lives on infrastructure, mounted in | Storage outlives compute |
-| `.env` with `HF_TOKEN` in plain text | Secret: scoped, rotated, audited | Secrets are first-class, not afterthoughts |
-| "It works on my machine" | Container image: identical run, everywhere | The artifact is the contract |
-
-The shift, in one line: invoke less, declare more.
-
 ## The pains
 
-Eleven pains, sequenced from foundation to compliance.
+Eleven pains, sequenced from foundation to compliance. Click any pain in the diagram to jump to it.
 
 ```mermaid
 flowchart LR
@@ -61,6 +47,17 @@ flowchart LR
         N11[Data residency]
     end
     S1 --> S2 --> S3 --> S4 --> S5 --> S6
+    click N1 "pains/01-model-works-locally.md"
+    click N2 "pains/02-gpu-job-crashed.md"
+    click N3 "pains/03-cant-get-a-gpu.md"
+    click N4 "pains/04-multi-node-training.md"
+    click N5 "pains/05-cold-start.md"
+    click N6 "pains/06-gpu-underutilized.md"
+    click N7 "pains/07-cant-roll-back.md"
+    click N8 "pains/08-latency-spiked.md"
+    click N9 "pains/09-costs-out-of-control.md"
+    click N10 "pains/10-prompt-version.md"
+    click N11 "pains/11-data-residency.md"
 ```
 
 ### Foundation
@@ -86,6 +83,20 @@ flowchart LR
 ### Compliance
 - [Customer X's data can't leave their region](pains/11-data-residency.md)
 
+## The mental model shift
+
+Before reading a pain, the reframe:
+
+| From (your world) | To (cloud native) | The shift |
+|---|---|---|
+| Notebook kernel on your laptop | Pod: ephemeral, scheduled, identical to N others | Compute is interchangeable |
+| `python serve.py` (an invocation) | Deployment: declared state of N replicas, platform keeps it true | Imperative becomes declarative |
+| Local file on a disk you own | Volume: survives the pod, lives on infrastructure, mounted in | Storage outlives compute |
+| `.env` with `HF_TOKEN` in plain text | Secret: scoped, rotated, audited | Secrets are first-class, not afterthoughts |
+| "It works on my machine" | Container image: identical run, everywhere | The artifact is the contract |
+
+The shift, in one line: invoke less, declare more.
+
 ## Reference
 
 - [The Rosetta table](reference/rosetta-table.md): one-to-one mappings between your world and cloud native
@@ -100,12 +111,6 @@ Runnable manifests, scripts, and starter code per pain. See [examples/](examples
 ## Contributing
 
 Feedback, corrections, and additional pains welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Closing
-
-Cloud native didn't ask the AI world's permission to become a prerequisite. It just became one, the moment AI workloads started serving real traffic, sharing real infrastructure, and shipping to real customers. The patterns are the same ones that took the rest of the industry from "it works on my laptop" to "it works for ten million users." They translate, mostly cleanly, with a handful of honest exceptions called out in the [reference section](#reference).
-
-The faster the translation happens, the faster AI in production stops being heroic and starts being boring. Boring is the goal.
 
 ## License
 

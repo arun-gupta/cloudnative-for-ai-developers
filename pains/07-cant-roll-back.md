@@ -1,0 +1,18 @@
+# "I can't roll back a bad model without downtime"
+
+What's happening: you pushed v3 of your model. p99 doubled and accuracy on your top intent dropped 4 points. Reverting means SSHing into N boxes, hoping the previous binary is still there, and praying nothing is half-deployed.
+
+The pattern: deployment is a controlled state transition, not a script. Old replicas keep serving until new ones prove healthy. Rollback is reverting the declared state, not re-running install.
+
+The primitives:
+- **Deployment**: declares "I want N replicas of this image with these resources"; the controller makes reality match
+- **Rolling update**: replaces pods in batches, only after each new one passes a health check
+- **Canary and blue-green** (Argo Rollouts, Flagger): route 5% of traffic to v3, watch metrics, ramp or revert
+
+What you keep: your model server. The Deployment is a YAML manifest wrapping it.
+
+What you give up: deploying as a verb you do. Deployment becomes a state you declare, and the platform converges to it.
+
+---
+
+**Navigation**: [← Previous: GPU underutilization](06-gpu-underutilized.md) | [Landscape](../README.md) | Next: [Latency spiked →](08-latency-spiked.md)

@@ -35,6 +35,8 @@ flowchart LR
         N2[GPU job crashed]
         N3[Can't get a GPU]
         N4[Multi-node falling over]
+        N2 ~~~ N3
+        N3 ~~~ N4
     end
     subgraph S3[3 Serving]
         direction TB
@@ -42,6 +44,9 @@ flowchart LR
         N6[GPU at 30 percent]
         N7[Can't roll back]
         N8[Latency spiked]
+        N5 ~~~ N6
+        N6 ~~~ N7
+        N7 ~~~ N8
     end
     subgraph S4[4 Operations]
         direction TB

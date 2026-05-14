@@ -1,18 +1,23 @@
-# "I can't tell which prompt version is in prod"
+# I can't tell which prompt version is in prod
 
-What's happening: a customer reports a regression on a specific kind of query. You suspect a prompt change from two weeks ago. The prompt lives partly in code, partly in a Notion doc, partly in a `.env` file on the prod box. Nobody can answer "what prompt was running on August 12th."
+> *A customer reports a regression on a specific kind of query. You suspect a prompt change from two weeks ago. The prompt lives partly in code, partly in a Notion doc, partly in a `.env` file on the prod box. Nobody can answer "what prompt was running on August 12th."*
 
-The pattern: any value that affects behavior is config, and config has a version, an owner, and a history. The prod environment doesn't have hidden state. What's running is what's in git.
+## The pattern
 
-The primitives:
+Any value that affects behavior is config, and config has a version, an owner, and a history. The prod environment doesn't have hidden state. What's running is what's in git.
+
+## The primitives
+
 - **ConfigMaps**: non-secret config (prompts, model names, feature flags) mounted into pods, versioned in git alongside the manifest
 - **Image tags and digests**: every deploy references a specific image digest, so you can reproduce any past state
 - **GitOps history**: the git log of your environment repo is your deployment audit trail; rollback is `git revert`
 
-What you keep: your prompts and your prompt-engineering process. They move from scattered storage into a tracked file.
+## Trade-offs
 
-What you give up: editing a prompt in prod via the web UI. Prompt changes become PRs, which is annoying for about a week and load-bearing forever after.
+**What you keep**: your prompts and your prompt-engineering process. They move from scattered storage into a tracked file.
+
+**What you give up**: editing a prompt in prod via the web UI. Prompt changes become PRs, which is annoying for about a week and load-bearing forever after.
 
 ---
 
-**Navigation**: [← Previous: Costs out of control](09-costs-out-of-control.md) | [Landscape](../README.md) | Next: [Data residency →](11-data-residency.md)
+[← Previous: Costs out of control](09-costs-out-of-control.md) · [Landscape](../README.md) · [Next: Data residency →](11-data-residency.md)

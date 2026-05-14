@@ -1,19 +1,24 @@
-# "Costs are out of control"
+# Costs are out of control
 
-What's happening: your AI app's GPU bill tripled. Half your replicas are idle at 3am, the other half OOM'd at peak yesterday, and nobody capped how many GPUs the new fine-tuning experiment can grab.
+> *Your AI app's GPU bill tripled. Half your replicas are idle at 3am, the other half OOM'd at peak yesterday, and nobody capped how many GPUs the new fine-tuning experiment can grab.*
 
-The pattern: capacity follows demand, not the other way around. Workloads scale based on signal. Idle workloads scale down (within the warm-pool floor you set for cold start). Best-effort jobs ride cheap, preemptible capacity.
+## The pattern
 
-The primitives:
+Capacity follows demand, not the other way around. Workloads scale based on signal. Idle workloads scale down (within the warm-pool floor you set for cold start). Best-effort jobs ride cheap, preemptible capacity.
+
+## The primitives
+
 - **HPA (Horizontal Pod Autoscaler)**: replicas track a metric (CPU, GPU, custom)
 - **KEDA**: HPA on event sources like queue length, Kafka lag, or a Prometheus query
 - **Spot and preemptible nodes**: cheap capacity for training, fine-tuning, and other interruptible work
 - **ResourceQuotas**: hard caps per team or namespace so one experiment can't eat the cluster
 
-What you keep: your model server and your training jobs. The scaling and capping happen around them.
+## Trade-offs
 
-What you give up: the comfort of a fixed fleet. Capacity becomes elastic, and you have to think about what's interruptible.
+**What you keep**: your model server and your training jobs. The scaling and capping happen around them.
+
+**What you give up**: the comfort of a fixed fleet. Capacity becomes elastic, and you have to think about what's interruptible.
 
 ---
 
-**Navigation**: [← Previous: Latency spiked](08-latency-spiked.md) | [Landscape](../README.md) | Next: [Prompt version in prod →](10-prompt-version.md)
+[← Previous: Latency spiked](08-latency-spiked.md) · [Landscape](../README.md) · [Next: Prompt version in prod →](10-prompt-version.md)

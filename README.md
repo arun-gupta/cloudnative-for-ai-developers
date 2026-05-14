@@ -1,4 +1,4 @@
-# Cloud Native for AI Developers: A Pain-First Field Guide
+# The Pain-First Way: Cloud Native for AI Developers
 
 Cloud native is the operating system for production software. AI development grew up parallel to it, mostly in notebooks and on rented GPU boxes. That's changed. Inference at scale, multi-agent systems, enterprise rollouts. The walls between an experiment and a system are coming down, and on the other side of those walls is a vocabulary AI developers haven't had to learn yet.
 
@@ -47,17 +47,17 @@ flowchart LR
         N11[11. Data residency]
     end
     S1 --> S2 --> S3 --> S4 --> S5 --> S6
-    click N1 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/01-model-works-locally.md"
-    click N2 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/02-gpu-job-crashed.md"
-    click N3 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/03-cant-get-a-gpu.md"
-    click N4 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/04-multi-node-training.md"
-    click N5 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/05-cold-start.md"
-    click N6 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/06-gpu-underutilized.md"
-    click N7 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/07-cant-roll-back.md"
-    click N8 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/08-latency-spiked.md"
-    click N9 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/09-costs-out-of-control.md"
-    click N10 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/10-prompt-version.md"
-    click N11 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/11-data-residency.md"
+    click N1 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/01-model-works-locally.md"
+    click N2 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/02-gpu-job-crashed.md"
+    click N3 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/03-cant-get-a-gpu.md"
+    click N4 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/04-multi-node-training.md"
+    click N5 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/05-cold-start.md"
+    click N6 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/06-gpu-underutilized.md"
+    click N7 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/07-cant-roll-back.md"
+    click N8 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/08-latency-spiked.md"
+    click N9 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/09-costs-out-of-control.md"
+    click N10 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/10-prompt-version.md"
+    click N11 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/11-data-residency.md"
 ```
 
 ## How to use this guide

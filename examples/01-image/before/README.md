@@ -28,6 +28,28 @@ You SSH to a Linux VM, `git clone`, `pip install -r requirements.txt`, `python -
 - **The model isn't there.** `sentence-transformers` downloads to `~/.cache/huggingface` on first call. The VM has no cache. The first request takes 30+ seconds, or fails if the VM has no internet.
 - **Pip versions drift.** Your `requirements.txt` pins `sentence-transformers==3.2.1`, but that pulls a transitive dependency whose wheel differs between macOS-arm64 and linux-x64.
 
-These are the visible failures. The invisible ones are worse: env vars set in your `.zshrc` that don't exist on the VM, HF tokens at `~/.huggingface/token` that aren't there either, model weights and data files at hardcoded paths.
+These are the visible failures. Env vars in your `.zshrc`, HF tokens at `~/.huggingface/token`, hardcoded paths: all leak from the host without you noticing.
 
-The [after/](../after/) folder shows how the Dockerfile makes all of this moot.
+## Why isn't a virtualenv enough?
+
+Fair question. Most AI/ML devs use venv (or conda) and find it works for development. Here's where it stops being enough at deployment.
+
+**What a venv solves:**
+
+- Project-level isolation of Python packages on a single machine. Your `transformers==4.41` doesn't collide with another project's `transformers==4.30`.
+- Reproducibility within one machine, as long as nothing on the system changes underneath.
+
+**What a venv doesn't touch:**
+
+- **The Python interpreter version.** `python3 -m venv .venv` uses whatever `python3` is on PATH at the moment. Your laptop might have 3.12 from brew; prod might have 3.10 from apt. The venv binds to whatever made it. `requirements.txt` has no Python-version field.
+- **Transitive dependencies and wheel platforms.** `pip install` resolves transitives at install time and picks a wheel per (OS, arch, Python version). Same `requirements.txt` produces different binaries on macos-arm64 vs linux-x86_64.
+- **System libraries.** PyTorch needs `libgomp1` for OpenMP, `libstdc++` of the right ABI, sometimes `libssl`. These come from the host OS, not from pip.
+- **Model weights.** HuggingFace downloads to `~/.cache/huggingface/hub/`, shared across every HF-using project on your user account, entirely outside the venv.
+- **Environment variables.** `HF_TOKEN`, `CUDA_HOME`, `LD_LIBRARY_PATH`. Inherited from the parent shell.
+- **The GPU stack.** NVIDIA driver, CUDA toolkit, cuDNN. Kernel-level or system-installed. The venv is not in the conversation.
+
+**Conda gets you further** because it manages non-Python deps and pins a Python version per env. But conda envs are still tied to the machine they live on, the channels they were built from, and the system below them. `conda env export` works across identical hosts and breaks across different ones.
+
+**The Dockerfile changes nothing about your dev workflow.** It is not a replacement for venv or conda when you're writing code. It replaces them as the _deployment boundary_. Inside the image, you can still use a venv if you want (some teams do, for layer caching). The image is what crosses machines reliably; the venv is what helps you work on one machine.
+
+The [after/](../after/) folder shows the Dockerfile that draws that boundary.

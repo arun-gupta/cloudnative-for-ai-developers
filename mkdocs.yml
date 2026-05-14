@@ -71,3 +71,4 @@ exclude_docs: |
   /LICENSE
   /.github/
   /mkdocs.yml
+  /requirements.txt

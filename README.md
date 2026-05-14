@@ -8,7 +8,7 @@ What this guide is not: a Kubernetes tutorial. There are 500 of those. This is a
 
 ## The pains
 
-Eleven pains, sequenced from foundation to compliance. Click any pain in the diagram to jump to it.
+Eleven pains, sequenced from foundation to compliance. Click any pain to jump to it.
 
 ```mermaid
 flowchart LR
@@ -47,41 +47,18 @@ flowchart LR
         N11[Data residency]
     end
     S1 --> S2 --> S3 --> S4 --> S5 --> S6
-    click N1 "pains/01-model-works-locally.md"
-    click N2 "pains/02-gpu-job-crashed.md"
-    click N3 "pains/03-cant-get-a-gpu.md"
-    click N4 "pains/04-multi-node-training.md"
-    click N5 "pains/05-cold-start.md"
-    click N6 "pains/06-gpu-underutilized.md"
-    click N7 "pains/07-cant-roll-back.md"
-    click N8 "pains/08-latency-spiked.md"
-    click N9 "pains/09-costs-out-of-control.md"
-    click N10 "pains/10-prompt-version.md"
-    click N11 "pains/11-data-residency.md"
+    click N1 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/01-model-works-locally.md"
+    click N2 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/02-gpu-job-crashed.md"
+    click N3 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/03-cant-get-a-gpu.md"
+    click N4 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/04-multi-node-training.md"
+    click N5 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/05-cold-start.md"
+    click N6 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/06-gpu-underutilized.md"
+    click N7 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/07-cant-roll-back.md"
+    click N8 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/08-latency-spiked.md"
+    click N9 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/09-costs-out-of-control.md"
+    click N10 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/10-prompt-version.md"
+    click N11 "https://github.com/arun-gupta/cloudnative-for-ai-developers/blob/main/pains/11-data-residency.md"
 ```
-
-### Foundation
-- [Model works locally, breaks in prod](pains/01-model-works-locally.md)
-
-### Compute
-- [My GPU job crashed at hour 14 and I lost everything](pains/02-gpu-job-crashed.md)
-- [I can't get a GPU when I need one](pains/03-cant-get-a-gpu.md)
-- [Multi-node training keeps falling over](pains/04-multi-node-training.md)
-
-### Serving
-- [Cold start for my 70B model takes 4 minutes](pains/05-cold-start.md)
-- [My GPU sits at 30% but my bill says 100%](pains/06-gpu-underutilized.md)
-- [I can't roll back a bad model without downtime](pains/07-cant-roll-back.md)
-- [Inference latency spiked and I can't tell why](pains/08-latency-spiked.md)
-
-### Operations
-- [Costs are out of control](pains/09-costs-out-of-control.md)
-
-### Governance
-- [I can't tell which prompt version is in prod](pains/10-prompt-version.md)
-
-### Compliance
-- [Customer X's data can't leave their region](pains/11-data-residency.md)
 
 ## The mental model shift
 

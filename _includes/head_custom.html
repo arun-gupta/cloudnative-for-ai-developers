@@ -1,0 +1,19 @@
+<!-- Mermaid support for the landscape diagram and any other mermaid blocks -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'default',
+    securityLevel: 'loose'
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('code.language-mermaid').forEach(function(code) {
+      var div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = code.textContent;
+      var wrapper = code.closest('pre, div.highlighter-rouge') || code;
+      wrapper.replaceWith(div);
+    });
+    mermaid.run();
+  });
+</script>

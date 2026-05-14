@@ -27,26 +27,32 @@ Eleven pains, sequenced from foundation to compliance.
 ```mermaid
 flowchart LR
     subgraph S1[1 Foundation]
+        direction TB
         N1[Model breaks in prod]
     end
     subgraph S2[2 Compute]
+        direction TB
         N2[GPU job crashed]
         N3[Can't get a GPU]
         N4[Multi-node falling over]
     end
     subgraph S3[3 Serving]
+        direction TB
         N5[Cold start]
         N6[GPU at 30 percent]
         N7[Can't roll back]
         N8[Latency spiked]
     end
     subgraph S4[4 Operations]
+        direction TB
         N9[Costs out of control]
     end
     subgraph S5[5 Governance]
+        direction TB
         N10[Prompt version in prod]
     end
     subgraph S6[6 Compliance]
+        direction TB
         N11[Data residency]
     end
     S1 --> S2 --> S3 --> S4 --> S5 --> S6

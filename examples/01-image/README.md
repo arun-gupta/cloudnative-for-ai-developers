@@ -1,4 +1,4 @@
-# Pain 1 example: from script to container
+# Pain 1 example: the same model, two deployments
 
 A working demonstration of [Pain 1: Model works locally, breaks in prod](../../pains/01-model-works-locally.md). Same Python code, two deployment styles. The Dockerfile is the only thing that changes. And it changes everything.
 
@@ -23,7 +23,7 @@ The model: `sentence-transformers/all-MiniLM-L6-v2`. About 22MB. The app exposes
 
 ## The point of the diff
 
-`before/app.py` and `after/app.py` are byte-for-byte identical. So are `requirements.txt`. **Going cloud native is not rewriting your code; it's wrapping it.** The Dockerfile is the entire delta.
+`before/app.py` and `after/app.py` are byte-for-byte identical. So are `requirements.txt`. **The cloud-native version wraps your code; it doesn't replace it.** The Dockerfile is the entire delta.
 
 ## See what your environment actually carries
 

@@ -4,7 +4,7 @@
 
 ## The pattern
 
-You can't fix what you can't see. Production systems instrument three layers before traffic exists. Metrics over time, logs as discrete events, traces showing the path of one request across services.
+Diagnosis requires visibility. Production systems in cloud native instrument three layers before traffic exists: metrics over time, logs as discrete events, traces showing the path of one request across services.
 
 ## The primitives
 
@@ -16,7 +16,7 @@ You can't fix what you can't see. Production systems instrument three layers bef
 
 **What you keep**: your inference server code. vLLM, TGI, and FastAPI either expose Prometheus metrics already or are one decorator away.
 
-**What you give up**: debugging from `print` statements after the fact. You instrument up front, or you stay blind.
+**What you give up**: print-based debugging as the primary tool for prod. Prints work fine when you can reproduce locally; for distributed inference, the instrumentation has to be in place before symptoms appear.
 
 ---
 

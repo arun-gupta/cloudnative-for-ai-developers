@@ -4,7 +4,7 @@
 
 ## The pattern
 
-Capacity follows demand, not the other way around. Workloads scale based on signal. Idle workloads scale down (within the warm-pool floor you set for cold start). Best-effort jobs ride cheap, preemptible capacity.
+In cloud native, capacity follows demand. Workloads scale based on signal. Idle workloads scale down (within the warm-pool floor you set for cold start). Best-effort jobs ride cheap, preemptible capacity.
 
 ## The primitives
 

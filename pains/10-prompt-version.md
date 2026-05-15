@@ -4,7 +4,7 @@
 
 ## The pattern
 
-Any value that affects behavior is config, and config has a version, an owner, and a history. The prod environment doesn't have hidden state. What's running is what's in git.
+Any value that affects behavior is config. In cloud native, config has a version, an owner, and a history. The prod environment doesn't have hidden state. What's running is what's in git.
 
 ## The primitives
 

@@ -4,7 +4,7 @@
 
 ## The pattern
 
-Data locality is a hard requirement, not a preference. Workloads run in the region where the data sits, with the network paths and access controls to prove it. Compliance lives in declarative policy, not in a Confluence page.
+When data locality is a hard requirement, workloads run in the region where the data sits, with the network paths and access controls to prove it. Compliance becomes enforced by declarative policy, not only documented in a Confluence page.
 
 ## The primitives
 

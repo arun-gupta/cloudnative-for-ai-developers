@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+.venv/
+.venv-*/
+venv/
+env/
+
+# Environment variables
+.env
+.env.local
+
+# macOS
+.DS_Store
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*~
+
+# Logs
+*.log
+
+# Jekyll (local GitHub Pages builds)
+_site/
+.jekyll-cache/

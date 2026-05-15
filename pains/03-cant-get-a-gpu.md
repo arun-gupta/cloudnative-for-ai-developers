@@ -10,10 +10,14 @@ A queue makes allocation declared, ordered, and observable. It doesn't conjure m
 
 ## The primitives
 
-- **Kueue**: native Kubernetes job queueing with quotas, priorities, and fair sharing per team
-- **PriorityClasses**: production inference outranks experiments; high-priority jobs preempt lower ones if needed
-- **GPU sharing** (MIG, time-slicing, MPS): one A100 or H100 split across multiple smaller workloads when you don't need a whole one
-- **Cluster autoscaler with GPU node pools**: capacity comes online when the queue grows, scales down when idle
+- **[Kueue](https://kueue.sigs.k8s.io/)**: native Kubernetes job queueing with quotas, priorities, and fair sharing per team
+- **[PriorityClasses](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)**: production inference outranks experiments; high-priority jobs preempt lower ones if needed
+- **GPU sharing** ([MIG](https://docs.nvidia.com/datacenter/tesla/mig-user-guide/), time-slicing, MPS): one A100 or H100 split across multiple smaller workloads when you don't need a whole one
+- **[Cluster autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler) with GPU node pools**: capacity comes online when the queue grows, scales down when idle
+
+## Try it
+
+A working demonstration lives in [`examples/03-queueing/`](../examples/03-queueing/). Three experiment jobs compete for two slots; a fourth production job preempts one and is admitted immediately. Runnable on a Mac with a local Kind cluster and no GPU required. The only change to a Job manifest is two lines.
 
 ## Trade-offs
 

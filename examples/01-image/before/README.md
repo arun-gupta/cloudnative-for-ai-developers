@@ -8,7 +8,7 @@ The way most AI/ML developers actually ship things: clone, install, run.
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn app:app --reload
+python -m uvicorn app:app --reload
 ```
 
 ```bash

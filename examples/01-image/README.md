@@ -40,26 +40,10 @@ Common things this surfaces: multiple Python installs (the "active" one is often
 
 ## Run the two versions
 
-**Before** (typical Python script):
-
-```bash
-cd before
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app:app --reload
-```
-
-**After** (container):
-
-```bash
-cd after
-bash build.sh
-docker run -p 8000:8000 embedder:latest
-```
-
 Both serve at `localhost:8000/embed`. Same curl, same response. The difference is everything around the response.
 
-See [`before/README.md`](before/README.md) for the failure modes the typical approach hits on a real Linux VM, and [`after/README.md`](after/README.md) for what the Dockerfile actually declares.
+- [`before/README.md`](before/README.md) — run instructions and the failure modes the typical approach hits on a real Linux VM
+- [`after/README.md`](after/README.md) — run instructions and what the Dockerfile actually declares
 
 ## Trade-offs
 

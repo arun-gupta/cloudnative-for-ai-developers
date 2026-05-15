@@ -101,7 +101,7 @@ job-experiment-c-xxxxx        ml-team                       False               
 job-production-finetune-xxx   ml-team   ml-cluster-queue    True                  3s    <-- admitted
 ```
 
-The production job was admitted immediately by preempting a lower-priority experiment. The preempted job re-queues automatically — it will be admitted when the production job finishes and frees its quota.
+The production job was admitted immediately by preempting a lower-priority experiment. The preempted job re-queues automatically and will be admitted when the production job finishes and frees its quota.
 
 Watch the pods to confirm:
 
@@ -157,7 +157,7 @@ annotations:
 | Kind node | A100 / H100 GPU node pool |
 | `default-flavor` (any node) | ResourceFlavor with `nvidia.com/gpu.product: A100-SXM4-80GB` |
 | 2-slot quota | Team GPU allocation (e.g., 8 GPUs per team) |
-| Preempted experiment re-queues | Same — Kueue unsuspends the job; your code resumes from checkpoint |
+| Preempted experiment re-queues | Same: Kueue unsuspends the job; your code resumes from checkpoint |
 
 ---
 

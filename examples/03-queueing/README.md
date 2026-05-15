@@ -23,13 +23,13 @@ A working demonstration of [Pain 3: Can't get a GPU when I need one](../../pains
     └── README.md
 ```
 
-No GPU required. CPU resources stand in for GPU slots — the scheduling mechanics are identical.
+No GPU required. CPU resources stand in for GPU slots; the scheduling mechanics are identical.
 
 ## The point of the diff
 
 `before/jobs.yaml` submits three jobs directly. They compete for nodes with no ordering, no priority, and no answer to "when will mine run?"
 
-`after/` installs Kueue, declares a quota, and attaches priority classes to jobs. The queue admits two jobs at a time. A third experiment job waits. When you submit a production job, it jumps the queue — and you can see every workload's position and admission status with one command.
+`after/` installs Kueue, declares a quota, and attaches priority classes to jobs. The queue admits two jobs at a time. A third experiment job waits. When you submit a production job, it jumps the queue. You can see every workload's position and admission status with one command.
 
 ## Run it
 

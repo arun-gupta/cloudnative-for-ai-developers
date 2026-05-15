@@ -4,7 +4,9 @@
 
 ## The pattern
 
-GPUs are a constrained resource, and constrained resources benefit from a queue, a priority order, and a clear answer to "when will my job run?" In cloud native, the scheduler handles this; without it, the equivalent is team coordination.
+GPUs aren't always scarce — they're often just invisible. You can't see who has them, when they'll free up, or whether your job would start if you waited five minutes. The scheduler knows, but it isn't telling you.
+
+A queue makes allocation declared, ordered, and observable. It doesn't conjure more GPUs; it gives every job a visible position, a priority, and a clear answer to "when will mine run?"
 
 ## The primitives
 

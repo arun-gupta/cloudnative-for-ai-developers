@@ -10,7 +10,7 @@
 
 set -euo pipefail
 
-DOCKER_USERNAME="${DOCKER_USERNAME:-arun-gupta}"
+DOCKER_USERNAME="${DOCKER_USERNAME:-arungupta}"
 IMAGE_NAME="${IMAGE_NAME:-embedder}"
 TAG="${TAG:-latest}"
 

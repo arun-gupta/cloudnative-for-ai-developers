@@ -9,6 +9,12 @@ bash build.sh
 docker run -p 8000:8000 embedder:latest
 ```
 
+Or skip the build and pull the pre-built image:
+
+```bash
+docker run -p 8000:8000 arungupta/embedder:latest
+```
+
 ```bash
 curl -X POST http://localhost:8000/embed \
   -H 'content-type: application/json' \

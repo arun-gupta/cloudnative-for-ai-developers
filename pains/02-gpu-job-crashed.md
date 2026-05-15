@@ -18,6 +18,10 @@ In cloud native, long-running compute is declared rather than invoked. You descr
 
 **What you give up**: `htop` and `ls -la`. Logs come from `kubectl logs`. State lives on a volume you don't see directly. Worth it the first time hour 14 doesn't cost you a day.
 
+## Try it
+
+A working demonstration lives in [`examples/02-jobs/`](../examples/02-jobs/). Same Python training loop shipped two ways (bare script vs Kubernetes Job + PVC), runnable on a Mac with a local Kind cluster and no GPU required. Kill the pod mid-run, watch the replacement resume from the last checkpoint.
+
 ---
 
 [← Pain 1: Model works locally](01-model-works-locally.md) · [Landscape](../README.md) · [Pain 3: Can't get a GPU →](03-cant-get-a-gpu.md)

@@ -34,7 +34,7 @@ The image is the boundary. Inside, everything is declared. Outside no longer aff
 ## Push to Docker Hub
 
 ```bash
-docker login -u <your-dockerhub-username>
+docker login -u <DOCKER_USERNAME>
 bash build.sh --push
 ```
 

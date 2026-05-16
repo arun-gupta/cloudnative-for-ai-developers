@@ -6,13 +6,13 @@ Same training job, submitted through [Kueue](https://kueue.sigs.k8s.io/). The qu
 
 ```bash
 kubectl apply --server-side \
-  -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.9.1/manifests.yaml
+  -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.17.3/manifests.yaml
 ```
 
 Wait for the controller to be ready:
 
 ```bash
-kubectl -n kueue-system wait --for=condition=Ready pod -l control-plane=controller-manager --timeout=60s
+kubectl rollout status deployment/kueue-controller-manager -n kueue-system
 ```
 
 ## 2. Build and load the image
@@ -58,10 +58,10 @@ kubectl get workloads
 ```
 
 ```
-NAME                       QUEUE     RESERVED IN         ADMITTED   FINISHED   AGE
-job-experiment-a-xxxxx     ml-team   ml-cluster-queue    True                  5s
-job-experiment-b-xxxxx     ml-team   ml-cluster-queue    True                  5s
-job-experiment-c-xxxxx     ml-team                       False                 5s
+NAME                    QUEUE     RESERVED IN        ADMITTED   FINISHED   AGE
+job-experiment-a-858e7  ml-team   ml-cluster-queue   True                  8s
+job-experiment-b-0b01a  ml-team   ml-cluster-queue   True                  8s
+job-experiment-c-45a31  ml-team                                            8s
 ```
 
 Two jobs are `ADMITTED` (running). The third is waiting in the queue. You can see exactly who is where.
@@ -70,6 +70,13 @@ Check the ClusterQueue status:
 
 ```bash
 kubectl get clusterqueue ml-cluster-queue -o yaml | grep -A10 'pendingWorkloads\|admittedWorkloads'
+```
+
+```
+  admittedWorkloads: 2
+  ...
+  pendingWorkloads: 1
+  reservingWorkloads: 2
 ```
 
 ## 5. Submit a high-priority production job
@@ -87,11 +94,11 @@ kubectl get workloads
 ```
 
 ```
-NAME                          QUEUE     RESERVED IN         ADMITTED   FINISHED   AGE
-job-experiment-a-xxxxx        ml-team   ml-cluster-queue    True                  45s
-job-experiment-b-xxxxx        ml-team                       False                 45s   <-- preempted
-job-experiment-c-xxxxx        ml-team                       False                 45s
-job-production-finetune-xxx   ml-team   ml-cluster-queue    True                  3s    <-- admitted
+NAME                           QUEUE     RESERVED IN        ADMITTED   FINISHED   AGE
+job-experiment-a-c73d6         ml-team   ml-cluster-queue   True                  15s
+job-experiment-b-562fd         ml-team                      False                 15s
+job-experiment-c-7b3c1         ml-team                                            15s
+job-production-finetune-9d71a  ml-team   ml-cluster-queue   True                  6s
 ```
 
 The production job was admitted immediately by preempting a lower-priority experiment. The preempted job re-queues automatically and will be admitted when the production job finishes and frees its quota.
@@ -116,8 +123,8 @@ kubectl delete -f priority-classes.yaml
 To remove Kueue itself:
 
 ```bash
-kubectl delete --server-side \
-  -f https://github.com/kubernetes-sigs/kueue/releases/download/v0.9.1/manifests.yaml
+kubectl delete -f \
+  https://github.com/kubernetes-sigs/kueue/releases/download/v0.17.3/manifests.yaml
 ```
 
 ## How the pieces fit together
@@ -152,7 +159,6 @@ The only additions to your existing Job manifest are two lines:
 ```yaml
 labels:
   kueue.x-k8s.io/queue-name: ml-team
-annotations:
   kueue.x-k8s.io/priority-class: production
 ```
 

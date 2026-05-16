@@ -6,9 +6,8 @@
 #
 # The key differences from before/jobs.yaml:
 #   labels:
-#     kueue.x-k8s.io/queue-name: ml-team          <-- routes the job through Kueue
-#   annotations:
-#     kueue.x-k8s.io/priority-class: experiment    <-- declares priority
+#     kueue.x-k8s.io/queue-name: ml-team           <-- routes the job through Kueue
+#     kueue.x-k8s.io/priority-class: experiment    <-- declares priority (must be a label)
 #
 # On a real GPU cluster: change "cpu: 1" to "nvidia.com/gpu: 1" and
 # set imagePullPolicy to Always (or IfNotPresent) with a real registry image.
@@ -19,7 +18,6 @@ metadata:
   namespace: default
   labels:
     kueue.x-k8s.io/queue-name: ml-team
-  annotations:
     kueue.x-k8s.io/priority-class: experiment
 spec:
   suspend: true  # Kueue controls admission; jobs start suspended
@@ -37,6 +35,12 @@ spec:
             limits:
               cpu: "1"
               memory: "128Mi"
+          volumeMounts:
+            - name: checkpoints
+              mountPath: /checkpoints
+      volumes:
+        - name: checkpoints
+          emptyDir: {}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -45,7 +49,6 @@ metadata:
   namespace: default
   labels:
     kueue.x-k8s.io/queue-name: ml-team
-  annotations:
     kueue.x-k8s.io/priority-class: experiment
 spec:
   suspend: true
@@ -63,6 +66,12 @@ spec:
             limits:
               cpu: "1"
               memory: "128Mi"
+          volumeMounts:
+            - name: checkpoints
+              mountPath: /checkpoints
+      volumes:
+        - name: checkpoints
+          emptyDir: {}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -71,7 +80,6 @@ metadata:
   namespace: default
   labels:
     kueue.x-k8s.io/queue-name: ml-team
-  annotations:
     kueue.x-k8s.io/priority-class: experiment
 spec:
   suspend: true
@@ -89,3 +97,9 @@ spec:
             limits:
               cpu: "1"
               memory: "128Mi"
+          volumeMounts:
+            - name: checkpoints
+              mountPath: /checkpoints
+      volumes:
+        - name: checkpoints
+          emptyDir: {}

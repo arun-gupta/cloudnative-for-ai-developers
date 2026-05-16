@@ -4,12 +4,9 @@ Submit Jobs directly. No queue, no priority, no visibility.
 
 ## What you'll observe
 
-Three jobs compete for two available CPU slots. One sits `Pending`. You don't know:
+Three jobs are submitted. Two get pods immediately. The third is silently blocked.
 
-- Which experiment will start next
-- When the pending job will run
-- Whether a critical production job could ever jump ahead
-- Who else is consuming cluster resources and why
+`kubectl get jobs` shows all three as `Running` — misleading. `kubectl get pods` tells the truth: only two pods exist. `experiment-c` has no pod, no ETA, and no visible position. Finding out why requires digging through `kubectl describe` Events.
 
 This is exactly what happens with GPUs on a shared cluster. Replace "1 CPU" with "1 A100" and the experience is identical.
 
@@ -48,35 +45,32 @@ Apply the three jobs at once:
 kubectl apply -f jobs.yaml
 ```
 
-Watch what happens:
-
-```bash
-kubectl get pods -w
-```
-
-You'll see two pods reach `Running`. `experiment-c` never appears:
-
-```
-experiment-a-xxxxx   1/1   Running   0          3s
-experiment-b-xxxxx   1/1   Running   0          3s
-```
-
-`experiment-c`'s pod was never created — the quota rejected it before Kubernetes could schedule anything. You won't see it in `get pods` at all.
-
-To find it:
+Now check the jobs:
 
 ```bash
 kubectl get jobs
 ```
 
 ```
-NAME           COMPLETIONS   DURATION   AGE
-experiment-a   0/1           10s        10s
-experiment-b   0/1           10s        10s
-experiment-c   0/1                      10s
+NAME           STATUS    COMPLETIONS   DURATION   AGE
+experiment-a   Running   0/1           9s         9s
+experiment-b   Running   0/1           9s         9s
+experiment-c   Running   0/1           9s         9s
 ```
 
-`experiment-c` has no duration — it has never run. To find out why:
+All three say `Running`. But check the pods:
+
+```bash
+kubectl get pods
+```
+
+```
+NAME                   READY   STATUS    RESTARTS   AGE
+experiment-a-xxxxx     1/1     Running   0          25s
+experiment-b-xxxxx     1/1     Running   0          25s
+```
+
+`experiment-c` has no pod. The jobs view lied. To find out why:
 
 ```bash
 kubectl describe job experiment-c
@@ -85,7 +79,7 @@ kubectl describe job experiment-c
 The answer is buried in the Events section at the bottom:
 
 ```
-Warning  FailedCreate  ... pods "experiment-c-xxxxx" is forbidden: exceeded quota: team-gpu-quota
+Warning  FailedCreate  ... pods "experiment-c-xxxxx" is forbidden: exceeded quota: team-gpu-quota, requested: requests.cpu=1, used: requests.cpu=2, limited: requests.cpu=2
 ```
 
 Not obvious. Not actionable. That's the pain.

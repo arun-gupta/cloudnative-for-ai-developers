@@ -82,6 +82,17 @@ The answer is buried in the Events section at the bottom:
 Warning  FailedCreate  ... pods "experiment-c-xxxxx" is forbidden: exceeded quota: team-gpu-quota, requested: requests.cpu=1, used: requests.cpu=2, limited: requests.cpu=2
 ```
 
+Or skip the noise and go straight to the events:
+
+```bash
+kubectl get events --field-selector involvedObject.name=experiment-c,reason=FailedCreate
+```
+
+```
+LAST SEEN   TYPE      REASON        OBJECT          MESSAGE
+2m          Warning   FailedCreate  job/experiment-c  pods "experiment-c-xxxxx" is forbidden: exceeded quota: team-gpu-quota, requested: requests.cpu=1, used: requests.cpu=2, limited: requests.cpu=2
+```
+
 Not obvious. Not actionable. That's the pain.
 
 ## The questions you can't answer
@@ -93,8 +104,8 @@ kubectl get pods --field-selector=status.phase=Pending
 # The pod doesn't exist. The job is blocked but there's nothing to observe.
 
 # Why is it blocked?
-kubectl describe job experiment-c
-# FailedCreate buried in Events. No ETA. No position in a queue.
+kubectl get events --field-selector involvedObject.name=experiment-c,reason=FailedCreate
+# FailedCreate with exceeded quota. No ETA. No position in a queue.
 
 # Which team is using all the resources?
 kubectl get pods -A --field-selector=status.phase=Running

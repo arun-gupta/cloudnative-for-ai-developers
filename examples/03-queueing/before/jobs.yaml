@@ -14,10 +14,10 @@ spec:
       restartPolicy: Never
       containers:
         - name: trainer
-          # Inline workload: sleep 60 simulates a training epoch.
+          # Inline workload: 10s per epoch, 20 epochs = ~200s total.
           # No image build required for the before case.
           image: python:3.11-slim
-          command: ["python", "-c", "import time, sys; [print(f'epoch {i}/20', flush=True) or time.sleep(3) for i in range(20)]; print('done')"]
+          command: ["python", "-c", "import time, sys; [print(f'epoch {i}/20', flush=True) or time.sleep(10) for i in range(20)]; print('done')"]
           resources:
             requests:
               cpu: "1"
@@ -37,7 +37,7 @@ spec:
       containers:
         - name: trainer
           image: python:3.11-slim
-          command: ["python", "-c", "import time, sys; [print(f'epoch {i}/20', flush=True) or time.sleep(3) for i in range(20)]; print('done')"]
+          command: ["python", "-c", "import time, sys; [print(f'epoch {i}/20', flush=True) or time.sleep(10) for i in range(20)]; print('done')"]
           resources:
             requests:
               cpu: "1"
@@ -57,7 +57,7 @@ spec:
       containers:
         - name: trainer
           image: python:3.11-slim
-          command: ["python", "-c", "import time, sys; [print(f'epoch {i}/20', flush=True) or time.sleep(3) for i in range(20)]; print('done')"]
+          command: ["python", "-c", "import time, sys; [print(f'epoch {i}/20', flush=True) or time.sleep(10) for i in range(20)]; print('done')"]
           resources:
             requests:
               cpu: "1"

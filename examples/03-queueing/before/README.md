@@ -13,6 +13,8 @@ Three jobs compete for two available CPU slots. One sits `Pending`. You don't kn
 
 This is exactly what happens with GPUs on a shared cluster. Replace "1 CPU" with "1 A100" and the experience is identical.
 
+Each job runs 20 epochs at 10 seconds each (~200 seconds total). `experiment-c` waits the full duration of two jobs before it can start. On a real GPU cluster each epoch might take 30-60 minutes, so the same wait is measured in hours, not minutes. The simulation compresses that to something you can observe in a single terminal session.
+
 ## Prerequisites
 
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)

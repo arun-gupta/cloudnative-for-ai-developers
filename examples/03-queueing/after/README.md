@@ -109,6 +109,15 @@ Watch the pods to confirm:
 kubectl get pods -w
 ```
 
+```
+NAME                        READY   STATUS        RESTARTS   AGE
+experiment-a-zckg9          1/1     Terminating   0          43s
+experiment-b-l55zd          1/1     Running       0          43s
+production-finetune-lwqf5   1/1     Running       0          12s
+```
+
+`experiment-a` is terminated to free its slot. `production-finetune` is running immediately.
+
 ## 6. Clean up
 
 ```bash

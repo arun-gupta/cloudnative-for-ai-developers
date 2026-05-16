@@ -20,6 +20,14 @@ This is exactly what happens with GPUs on a shared cluster. Replace "1 CPU" with
 
 ## Run it
 
+First, apply the namespace quota. This simulates a shared cluster where your team's allocation is 2 GPU slots. On a well-resourced machine (M4, 32-core workstation) the jobs would otherwise all schedule immediately and the pain wouldn't land.
+
+```bash
+kubectl apply -f quota.yaml
+```
+
+> **Note:** the quota is a simulation device. In this demo it stands in for a real shared GPU cluster where someone else already holds most of the allocation. It is not something you'd add to fix the problem — that's what Kueue does in the `after/` folder.
+
 Apply the three jobs at once:
 
 ```bash
@@ -63,6 +71,7 @@ kubectl get pods -A --field-selector=status.phase=Running
 
 ```bash
 kubectl delete -f jobs.yaml
+kubectl delete -f quota.yaml
 ```
 
 ## What this costs in the real world

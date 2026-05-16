@@ -22,11 +22,23 @@ Each job runs 20 epochs at 10 seconds each (~200 seconds total). `experiment-c` 
 
 ## Run it
 
-First, apply the namespace quota. This simulates a shared cluster where your team's allocation is 2 GPU slots. On a well-resourced machine (M4, 32-core workstation) the jobs would otherwise all schedule immediately and the pain wouldn't land.
+First, apply the namespace quota and wait for it to be active. This simulates a shared cluster where your team's allocation is 2 GPU slots. On a well-resourced machine (M4, 32-core workstation) the jobs would otherwise all schedule immediately and the pain wouldn't land.
 
 ```bash
 kubectl apply -f quota.yaml
+kubectl describe resourcequota team-gpu-quota
 ```
+
+You should see both limits set before continuing:
+
+```
+Resource         Used  Hard
+--------         ----  ----
+requests.cpu     0     2
+requests.memory  0     512Mi
+```
+
+If `Hard` shows `0` or is blank, wait a moment and re-run the describe. Then apply the jobs:
 
 > **Note:** the quota is a simulation device. In this demo it stands in for a real shared GPU cluster where someone else already holds most of the allocation. It is not something you'd add to fix the problem — that's what Kueue does in the `after/` folder.
 

@@ -59,9 +59,9 @@ kubectl get workloads
 
 ```
 NAME                    QUEUE     RESERVED IN        ADMITTED   FINISHED   AGE
-job-experiment-a-858e7  ml-team   ml-cluster-queue   True                  8s
-job-experiment-b-0b01a  ml-team   ml-cluster-queue   True                  8s
-job-experiment-c-45a31  ml-team                                            8s
+job-experiment-a-9838c  ml-team   ml-cluster-queue   True                  5s
+job-experiment-b-efc63  ml-team   ml-cluster-queue   True                  5s
+job-experiment-c-6233e  ml-team                                            5s
 ```
 
 Two jobs are `ADMITTED` (running). The third is waiting in the queue. You can see exactly who is where.
@@ -95,10 +95,10 @@ kubectl get workloads
 
 ```
 NAME                           QUEUE     RESERVED IN        ADMITTED   FINISHED   AGE
-job-experiment-a-c73d6         ml-team                      False                 15s
-job-experiment-b-562fd         ml-team   ml-cluster-queue   True                  15s
-job-experiment-c-7b3c1         ml-team                                            15s
-job-production-finetune-9d71a  ml-team   ml-cluster-queue   True                  6s
+job-experiment-a-9838c         ml-team                      False                 36s
+job-experiment-b-efc63         ml-team   ml-cluster-queue   True                  36s
+job-experiment-c-6233e         ml-team                                            36s
+job-production-finetune-316af  ml-team   ml-cluster-queue   True                  5s
 ```
 
 The production job was admitted immediately by preempting a lower-priority experiment. The preempted job re-queues automatically and will be admitted when the production job finishes and frees its quota.

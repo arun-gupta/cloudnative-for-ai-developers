@@ -49,6 +49,10 @@ sequenceDiagram
     Note over M,W: Training continues
 ```
 
+## Try it
+
+A working demonstration lives in [`examples/04-multi-node/`](../examples/04-multi-node/). Same distributed training simulation submitted two ways (bare Jobs vs PyTorchJob), runnable on a Mac with a local Kind cluster and no GPU required. The before case shows the rendezvous timeout and hang; the after case shows the operator coordinating all pods together and recovering a crashed worker without restarting the master.
+
 ## The primitives
 
 - **Gang scheduling** (Volcano, Kueue): the job starts when all N pods can run together, not pod-by-pod

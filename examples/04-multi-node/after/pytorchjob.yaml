@@ -9,6 +9,18 @@ spec:
       restartPolicy: OnFailure
       template:
         spec:
+          # Force the master onto a different node than the worker so the demo
+          # shows genuine cross-node communication, not loopback on the same host.
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: training.kubeflow.org/job-name
+                        operator: In
+                        values:
+                          - dist-training
+                  topologyKey: kubernetes.io/hostname
           containers:
             - name: pytorch
               image: dist-training:latest
@@ -20,6 +32,16 @@ spec:
       restartPolicy: OnFailure
       template:
         spec:
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: training.kubeflow.org/job-name
+                        operator: In
+                        values:
+                          - dist-training
+                  topologyKey: kubernetes.io/hostname
           containers:
             - name: pytorch
               image: dist-training:latest

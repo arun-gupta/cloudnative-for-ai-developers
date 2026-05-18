@@ -14,6 +14,7 @@ A working demonstration of [Pain 4: Multi-node training keeps falling over](../.
     ├── Dockerfile
     ├── .dockerignore
     ├── build.sh
+    ├── kind-config.yaml      # 3-node Kind cluster (1 control-plane + 2 workers)
     ├── pytorchjob.yaml       # PyTorchJob: 1 master + 1 worker, operator-coordinated
     └── README.md
 ```
@@ -29,9 +30,9 @@ a node still pulling the image). The master times out. Both jobs fail. No traini
 happened.
 
 `after/pytorchjob.yaml` submits a single `PyTorchJob`. The Training Operator creates
-both pods together, injects `MASTER_ADDR`, `RANK`, and `WORLD_SIZE` automatically,
-and handles failure semantics at the distributed-job level. Rendezvous succeeds.
-Training completes.
+both pods together on separate Kind nodes (via `podAntiAffinity`), injects `MASTER_ADDR`,
+`RANK`, and `WORLD_SIZE` automatically, and handles failure semantics at the
+distributed-job level. Rendezvous succeeds. Training completes across two nodes.
 
 ## Run it
 

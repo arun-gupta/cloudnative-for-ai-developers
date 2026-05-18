@@ -7,6 +7,16 @@ The operator creates all pods together, injects `MASTER_ADDR`, `RANK`, and `WORL
 automatically, and handles failure semantics at the distributed-job level. The
 rendezvous succeeds. Training completes.
 
+## What this demonstrates
+
+| Primitive | Demonstrated here |
+|---|---|
+| Gang scheduling (all pods start together) | ✅ via Training Operator pod lifecycle |
+| Operator-coordinated rendezvous | ✅ `MASTER_ADDR` / `RANK` / `WORLD_SIZE` injected automatically |
+| Per-worker failure recovery (no full restart) | ✅ `restartPolicy: OnFailure` on the worker |
+| High-performance networking (RDMA, GPUDirect) | ❌ Kind uses plain TCP — requires real InfiniBand/RoCE hardware |
+| Topology-aware scheduling | ❌ Kind is single-node — requires a multi-node cluster with rack topology |
+
 ## Prerequisites
 
 - [Docker](https://docs.docker.com/get-docker/) (tested with 29+)

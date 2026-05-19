@@ -215,7 +215,14 @@ dist-training-worker-0   0/1     Completed   0          72s   10.244.1.2   kind-
 
 ## 6. Simulate a worker failure
 
-While the job is running, delete the worker pod:
+> **Timing:** This must be done while the job is still running (STATE = Running).
+> The job completes in about 30 seconds, so act quickly after `kubectl apply`.
+> If the job already shows `Succeeded`, clean up and resubmit first:
+> ```bash
+> kubectl delete -f pytorchjob.yaml && kubectl apply -f pytorchjob.yaml
+> ```
+
+Once the job is running, kill the worker pod mid-training:
 
 ```bash
 kubectl delete pod dist-training-worker-0
@@ -225,7 +232,7 @@ The Training Operator's `restartPolicy: OnFailure` creates a replacement pod imm
 The new worker reconnects to the master's rendezvous server (which is still running),
 and training continues without restarting the master.
 
-Watch the new pod appear:
+Watch the replacement pod appear:
 
 ```bash
 kubectl get pods -l training.kubeflow.org/job-name=dist-training -w

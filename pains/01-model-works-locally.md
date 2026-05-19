@@ -12,6 +12,34 @@ Three layers of your environment ship with you in ways `requirements.txt` cannot
 
 ## The pattern
 
+**Without a container image**
+
+```mermaid
+flowchart LR
+  subgraph Laptop["💻 Your laptop"]
+    C[code]
+    P[Python 3.11 + pyenv]
+    L[libomp, CUDA 12.1]
+    M[~/.cache/huggingface]
+  end
+  C -->|git push| Prod["☁️ Prod VM\n(different Python,\nmissing libs,\nno model cache)"]
+  Prod --> X[💥 crash on import]
+```
+
+Three layers that don't travel with `git push`: runtime, system libs, and cached state.
+
+**With a container image**
+
+```mermaid
+flowchart LR
+  DF[Dockerfile\ndeclares all 3 layers] --> IMG[Container image\ncode + Python + libs + weights]
+  IMG -->|same digest| E1[Your laptop ✓]
+  IMG -->|same digest| E2[Teammate ✓]
+  IMG -->|same digest| E3[Prod ✓]
+```
+
+One artifact, identical everywhere.
+
 The unit of deployment is not your code, it's your code plus everything it depends on. You declare that whole thing once, freeze it, sign it, and ship the frozen artifact to every environment.
 
 ## How cloud native helps

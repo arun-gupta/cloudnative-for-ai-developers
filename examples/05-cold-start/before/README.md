@@ -4,8 +4,6 @@
 
 This is the natural starting point. Most model servers begin this way: a startup script or Dockerfile entrypoint that downloads weights from a hardcoded URL (an S3 bucket, a GCS path, a HuggingFace repo ID) before launching the server. It works fine until you need to change the source. Switch from S3 to GCS, move to a different bucket, or pull from HuggingFace instead. You are rebuilding and re-pushing the entire server image.
 
-Change the source (S3 to GCS, one bucket to another, local file to HuggingFace Hub) and you edit `server.py` and rebuild the image.
-
 ## Run it
 
 No dependencies beyond the standard library.
@@ -14,29 +12,27 @@ No dependencies beyond the standard library.
 python3 server.py
 ```
 
-You'll see the weight download happen during startup:
+## Expected output
+
+Startup:
 
 ```
-[startup] Downloading weights from https://... 
-[startup] Weights downloaded in 0.31s -> /tmp/weights.txt
+[startup] Downloading weights from https://raw.githubusercontent.com/arun-gupta/the-pain-first-way/main/examples/05-cold-start/after/weights.txt ...
+[startup] Weights downloaded in 0.45s -> /tmp/weights.txt
 [startup] Model loaded. Weights preview: these are fake model weights...
 [ready] Inference server listening on port 8080
+[ready]   GET /health  -> liveness check
+[ready]   GET /predict -> simulated inference
 ```
 
-In another terminal, test the endpoint:
+In another terminal:
 
 ```bash
-curl http://localhost:8080/health
-curl http://localhost:8080/predict
+$ curl localhost:8080/predict
+prediction using model: [these are fake model weights
+layer_0: 0.312 0.847 0.193 0.65...]
 ```
 
 ## The problem
 
-The server image carries knowledge of where the weights live. On a real inference server this means:
-
-- Cloud credentials baked into the image (or injected via env vars that the server code reads)
-- A different team manages weight storage? They have to coordinate with whoever owns the server image.
-- Move weights to a new bucket? Rebuild and redeploy the server.
-- The server startup time includes the download. There is no way to pre-stage weights independently.
-
-The [after/](../after/) folder shows a cleaner split.
+To change the weights source (switch from this URL to an S3 bucket, a GCS path, or HuggingFace), you edit `WEIGHTS_URL` in `server.py` and rebuild the image. The download source and the serving logic are coupled in the same file and the same container image. That coupling is what the [`after/`](../after/) example eliminates.

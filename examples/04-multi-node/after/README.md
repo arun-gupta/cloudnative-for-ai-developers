@@ -153,16 +153,16 @@ kubectl logs -f dist-training-master-0
 [rank 0] Opening rendezvous on :23456. Waiting up to 60s for 1 worker(s) ...
 [rank 0] Worker connected from ('10.244.1.2', 33094)
 [rank 0] All 2 rank(s) ready. Starting distributed training.
-[rank 0] epoch  0/10  loss=2.3000
-[rank 0] epoch  1/10  loss=1.8134
-[rank 0] epoch  2/10  loss=1.4344
-[rank 0] epoch  3/10  loss=1.1392
-[rank 0] epoch  4/10  loss=0.9093
-[rank 0] epoch  5/10  loss=0.7303
-[rank 0] epoch  6/10  loss=0.5909
-[rank 0] epoch  7/10  loss=0.4823
-[rank 0] epoch  8/10  loss=0.3977
-[rank 0] epoch  9/10  loss=0.3319
+[rank 0] epoch 0/10 loss=2.3000
+[rank 0] epoch 1/10 loss=1.8134
+[rank 0] epoch 2/10 loss=1.4344
+[rank 0] epoch 3/10 loss=1.1392
+[rank 0] epoch 4/10 loss=0.9093
+[rank 0] epoch 5/10 loss=0.7303
+[rank 0] epoch 6/10 loss=0.5909
+[rank 0] epoch 7/10 loss=0.4823
+[rank 0] epoch 8/10 loss=0.3977
+[rank 0] epoch 9/10 loss=0.3319
 [rank 0] Training complete.
 ```
 
@@ -176,16 +176,16 @@ kubectl logs -f dist-training-worker-0
 [rank 1] Starting. WORLD_SIZE=2 MASTER=dist-training-master-0:23456
 [rank 1] Connecting to master at dist-training-master-0:23456 (timeout: 60s) ...
 [rank 1] Rendezvous complete. Starting distributed training.
-[rank 1] epoch  0/10  loss=2.3000
-[rank 1] epoch  1/10  loss=1.8134
-[rank 1] epoch  2/10  loss=1.4344
-[rank 1] epoch  3/10  loss=1.1392
-[rank 1] epoch  4/10  loss=0.9093
-[rank 1] epoch  5/10  loss=0.7303
-[rank 1] epoch  6/10  loss=0.5909
-[rank 1] epoch  7/10  loss=0.4823
-[rank 1] epoch  8/10  loss=0.3977
-[rank 1] epoch  9/10  loss=0.3319
+[rank 1] epoch 0/10 loss=2.3000
+[rank 1] epoch 1/10 loss=1.8134
+[rank 1] epoch 2/10 loss=1.4344
+[rank 1] epoch 3/10 loss=1.1392
+[rank 1] epoch 4/10 loss=0.9093
+[rank 1] epoch 5/10 loss=0.7303
+[rank 1] epoch 6/10 loss=0.5909
+[rank 1] epoch 7/10 loss=0.4823
+[rank 1] epoch 8/10 loss=0.3977
+[rank 1] epoch 9/10 loss=0.3319
 [rank 1] Training complete.
 ```
 

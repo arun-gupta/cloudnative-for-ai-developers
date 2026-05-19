@@ -15,9 +15,15 @@ Each job runs 20 epochs at 10 seconds each (~200 seconds total). `experiment-c` 
 ## Prerequisites
 
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
-- A running Kind cluster (`kind create cluster` if you don't have one)
+- [kind CLI](https://kind.sigs.k8s.io/docs/user/quick-start/#installation)
 
-## Run it
+## 1. Create a Kind cluster
+
+```bash
+kind create cluster --name kind
+```
+
+## 2. Run it
 
 First, apply the namespace quota and wait for it to be active. This simulates a shared cluster where your team's allocation is 2 GPU slots. On a well-resourced machine (M4, 32-core workstation) the jobs would otherwise all schedule immediately and the pain wouldn't land.
 
@@ -120,6 +126,7 @@ kubectl get pods -A --field-selector=status.phase=Running
 ```bash
 kubectl delete -f jobs.yaml
 kubectl delete -f quota.yaml
+kind delete cluster --name kind
 ```
 
 ## What this costs in the real world

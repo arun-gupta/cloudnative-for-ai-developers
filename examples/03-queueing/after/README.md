@@ -2,7 +2,19 @@
 
 Same training job, submitted through [Kueue](https://kueue.sigs.k8s.io/). The queue admits two jobs at a time. A third waits with a visible position. A high-priority production job preempts a waiting experiment so it can start immediately.
 
-## 1. Install Kueue
+## Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) (tested with 29+)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [kind CLI](https://kind.sigs.k8s.io/docs/user/quick-start/#installation)
+
+## 1. Create a Kind cluster
+
+```bash
+kind create cluster --name kind
+```
+
+## 2. Install Kueue
 
 ```bash
 kubectl apply --server-side \
@@ -15,7 +27,7 @@ Wait for the controller to be ready:
 kubectl rollout status deployment/kueue-controller-manager -n kueue-system
 ```
 
-## 2. Build and load the image
+## 3. Build and load the image
 
 ```bash
 ./build.sh
@@ -25,7 +37,7 @@ This builds `training-job:latest` and loads it into your Kind cluster. No regist
 
 > **Already did Pain 2?** The same image is used. Skip this step if `training-job:latest` is already loaded.
 
-## 3. Apply the queue resources
+## 4. Apply the queue resources
 
 ```bash
 kubectl apply -f priority-classes.yaml
@@ -45,7 +57,7 @@ NAME               COHORT   PENDING WORKLOADS
 ml-cluster-queue            0
 ```
 
-## 4. Submit three experiment jobs
+## 5. Submit three experiment jobs
 
 ```bash
 kubectl apply -f job-experiment.yaml
@@ -79,7 +91,7 @@ kubectl get clusterqueue ml-cluster-queue -o yaml | grep -A10 'pendingWorkloads\
   reservingWorkloads: 2
 ```
 
-## 5. Submit a high-priority production job
+## 6. Submit a high-priority production job
 
 While all three experiment jobs are in the queue:
 
@@ -118,7 +130,7 @@ production-finetune-lwqf5   1/1     Running       0          12s
 
 `experiment-a` is terminated to free its slot. `production-finetune` is running immediately.
 
-## 6. Clean up
+## 7. Clean up
 
 ```bash
 kubectl delete -f job-production.yaml
@@ -134,6 +146,12 @@ To remove Kueue itself:
 ```bash
 kubectl delete -f \
   https://github.com/kubernetes-sigs/kueue/releases/download/v0.17.3/manifests.yaml
+```
+
+To delete the Kind cluster:
+
+```bash
+kind delete cluster --name kind
 ```
 
 ## How the pieces fit together

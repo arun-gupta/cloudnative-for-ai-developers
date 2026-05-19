@@ -8,10 +8,15 @@ Kill the pod mid-run. The Job restarts it. It resumes from the last checkpoint, 
 
 - [Docker](https://docs.docker.com/get-docker/) (tested with 29+)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
-- A running Kind cluster (`kind create cluster` if you don't have one)
 - [kind CLI](https://kind.sigs.k8s.io/docs/user/quick-start/#installation)
 
-## 1. Build and load the image
+## 1. Create a Kind cluster
+
+```bash
+kind create cluster --name kind
+```
+
+## 2. Build and load the image
 
 ```bash
 ./build.sh
@@ -22,10 +27,10 @@ This builds the Docker image and loads it directly into your Kind cluster. No re
 Verify the image is loaded:
 
 ```bash
-docker exec -it $(kind get nodes --name $(kind get clusters | head -1)) crictl images | grep training-job
+docker exec -it $(kind get nodes --name kind) crictl images | grep training-job
 ```
 
-## 2. Apply the manifests
+## 3. Apply the manifests
 
 ```bash
 kubectl apply -f pvc.yaml
@@ -34,7 +39,7 @@ kubectl apply -f job.yaml
 
 The PVC provisions a small volume on the Kind node. The Job starts a pod that mounts it.
 
-## 3. Watch the training run
+## 4. Watch the training run
 
 ```bash
 kubectl get pods -w
@@ -56,7 +61,7 @@ epoch   2/20  loss=1.5378  (checkpoint saved)
 ...
 ```
 
-## 4. Simulate a crash
+## 5. Simulate a crash
 
 While the job is running, open a second terminal and delete the pod:
 
@@ -70,7 +75,7 @@ The Job controller immediately schedules a replacement pod. Watch it appear:
 kubectl get pods -w
 ```
 
-## 5. Watch the resume
+## 6. Watch the resume
 
 Tail the new pod's logs:
 
@@ -89,11 +94,12 @@ epoch   9/20  loss=0.3267  (checkpoint saved)
 
 That's the point. A real GPU job at hour 14 would resume from hour 13, not hour 0.
 
-## 6. Clean up
+## 7. Clean up
 
 ```bash
 kubectl delete -f job.yaml
 kubectl delete -f pvc.yaml
+kind delete cluster --name kind
 ```
 
 ## What the Dockerfile declares

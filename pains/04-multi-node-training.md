@@ -49,10 +49,6 @@ sequenceDiagram
     Note over M,W: Training continues
 ```
 
-## Try it
-
-A working demonstration lives in [`examples/04-multi-node/`](../examples/04-multi-node/). Same distributed training simulation submitted two ways (bare Jobs vs PyTorchJob), runnable on a Mac with a local Kind cluster and no GPU required. The before case shows the rendezvous timeout and hang; the after case shows the operator coordinating all pods together and recovering a crashed worker without restarting the master.
-
 ## The primitives
 
 - **Gang scheduling** (Volcano, Kueue): the job starts when all N pods can run together, not pod-by-pod. The scheduler holds every pod in a pending state until the full set can be admitted simultaneously. If the cluster doesn't have room for all N pods right now, none start. This eliminates the partial-start race where some ranks are running while others are still waiting to be scheduled.
@@ -65,6 +61,10 @@ A working demonstration lives in [`examples/04-multi-node/`](../examples/04-mult
 **What you keep**: your PyTorch or JAX training code.
 
 **What you give up**: the assumption that you can just `torchrun` 32 ranks and it'll work. The platform has to know this is a distributed job and treat it as one.
+
+## Try it
+
+A working demonstration lives in [`examples/04-multi-node/`](../examples/04-multi-node/). Same distributed training simulation submitted two ways (bare Jobs vs PyTorchJob), runnable on a Mac with a local Kind cluster and no GPU required. The before case shows the rendezvous timeout and hang; the after case shows the operator coordinating all pods together and recovering a crashed worker without restarting the master.
 
 ---
 

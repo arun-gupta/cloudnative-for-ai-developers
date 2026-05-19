@@ -72,6 +72,11 @@ Wait for the controller to be ready:
 kubectl rollout status deployment/training-operator -n kubeflow
 ```
 
+```
+Waiting for deployment "training-operator" rollout to finish: 0 of 1 updated replicas are available...
+deployment "training-operator" successfully rolled out
+```
+
 ## 3. Build and load the image
 
 ```bash

@@ -2,6 +2,8 @@
 
 `server.py` downloads the "model weights" file from a hardcoded URL on startup. The source URL and all download logic live inside the server code.
 
+This is the natural starting point. Most model servers begin this way: a startup script or Dockerfile entrypoint that downloads weights from a hardcoded URL (an S3 bucket, a GCS path, a HuggingFace repo ID) before launching the server. It works fine until you need to change the source. Switch from S3 to GCS, move to a different bucket, or pull from HuggingFace instead. You are rebuilding and re-pushing the entire server image.
+
 Change the source (S3 to GCS, one bucket to another, local file to HuggingFace Hub) and you edit `server.py` and rebuild the image.
 
 ## Run it

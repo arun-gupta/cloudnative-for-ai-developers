@@ -228,15 +228,63 @@ Once the job is running, kill the worker pod mid-training:
 kubectl delete pod dist-training-worker-0
 ```
 
-The Training Operator's `restartPolicy: OnFailure` creates a replacement pod immediately.
-The new worker reconnects to the master's rendezvous server (which is still running),
-and training continues without restarting the master.
-
 Watch the replacement pod appear:
 
 ```bash
 kubectl get pods -l training.kubeflow.org/job-name=dist-training -w
 ```
+
+```
+NAME                     READY   STATUS    RESTARTS   AGE
+dist-training-master-0   1/1     Running   0          7s
+dist-training-worker-0   1/1     Running   0          4s
+```
+
+The operator recreated the worker immediately (notice the younger AGE).
+
+Now verify the master completed normally despite the worker being killed:
+
+```bash
+kubectl logs dist-training-master-0
+```
+
+Look for three things:
+- **Worker reconnected** — `Worker connected from ...` appears (new IP from the replacement pod)
+- **Training completed** — all 10 epochs logged with no gap or restart
+- **No master restart** — the master log is continuous from epoch 0 to Training complete
+
+```
+[rank 0] Starting. WORLD_SIZE=2 MASTER=dist-training-master-0:23456
+[rank 0] Opening rendezvous on :23456. Waiting up to 60s for 1 worker(s) ...
+[rank 0] Worker connected from ('10.244.1.4', 34224)
+[rank 0] All 2 rank(s) ready. Starting distributed training.
+[rank 0] epoch 0/10 loss=2.3000
+[rank 0] epoch 1/10 loss=1.8134
+[rank 0] epoch 2/10 loss=1.4344
+[rank 0] epoch 3/10 loss=1.1392
+[rank 0] epoch 4/10 loss=0.9093
+[rank 0] epoch 5/10 loss=0.7303
+[rank 0] epoch 6/10 loss=0.5909
+[rank 0] epoch 7/10 loss=0.4823
+[rank 0] epoch 8/10 loss=0.3977
+[rank 0] epoch 9/10 loss=0.3319
+[rank 0] Training complete.
+```
+
+Finally, confirm the job succeeded:
+
+```bash
+kubectl get pytorchjob dist-training
+```
+
+```
+NAME            STATE       AGE
+dist-training   Succeeded   108s
+```
+
+This is the contrast with `before/`: a crashed worker no longer kills the whole run.
+The operator replaced it and the master never knew — it just waited at the rendezvous
+socket until the new worker connected.
 
 ## 7. Clean up
 

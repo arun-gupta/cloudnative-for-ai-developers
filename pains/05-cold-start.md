@@ -2,15 +2,6 @@
 
 > *A new replica needs to scale up. It pulls a 30GB image, downloads model weights from object storage, loads them into GPU memory, and warms the inference engine. Your users wait 4 minutes for the first response after a scale event.*
 
-```mermaid
-flowchart LR
-    A[Pod scheduled] --> B[Pull 30GB image<br/>~90s]
-    B --> C[Load weights to disk<br/>~120s]
-    C --> D[Load to GPU memory<br/>~20s]
-    D --> E[Engine warmup<br/>~10s]
-    E --> F[Ready<br/>~4 min total]
-```
-
 ## The pattern
 
 Each step in the startup sequence is sequential and slow. On a cold node with no cache, pulling a 30 GB image is slow even on high-speed networks; pull-through registries and node-local image caches reduce this, but without pre-warming, a new node still pays the full pull cost during a scale event, exactly when you need replicas up fast. Downloading 140 GB of FP16 weights from S3 or GCS adds another 2-3 minutes. Loading those weights into GPU memory is another 20-30 seconds. Engine warmup (JIT compilation, KV cache allocation) adds more on top. None of these steps overlap by default.

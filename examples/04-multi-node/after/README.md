@@ -173,6 +173,7 @@ kubectl logs -f dist-training-worker-0
 ```
 
 ```
+Defaulted container "pytorch" out of: pytorch, init-pytorch (init)
 [rank 1] Starting. WORLD_SIZE=2 MASTER=dist-training-master-0:23456
 [rank 1] Connecting to master at dist-training-master-0:23456 (timeout: 60s) ...
 [rank 1] Rendezvous complete. Starting distributed training.

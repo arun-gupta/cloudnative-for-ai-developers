@@ -23,10 +23,10 @@ There are two axes of attack. On the model side: smaller models, quantized weigh
 
 ```mermaid
 flowchart LR
-    A2[Image cached on node<br/>~0s] --> B2[Weights on local volume<br/>~5s] --> C2[Load to GPU<br/>~20s] --> D2[Engine warmup<br/>~10s] --> E2[Ready<br/>~35s]
+    A2[Image cached on node<br/>DaemonSet · ~0s] --> B2[Weights on local volume<br/>PVC · ~5s] --> C2[Load to GPU<br/>~20s] --> D2[Engine warmup<br/>~10s] --> E2[Ready<br/>~35s]
     P1[Pre-pulled images] -.eliminates pull cost.-> A2
     P2[Node-local weight cache] -.eliminates download.-> B2
-    P3[Warm pool] -.skips all steps.-> F[Request served instantly]
+    P3[Warm pool<br/>minReplicas / KServe] -.skips all steps.-> F[Request served instantly]
 ```
 
 - **Pre-pulled images on nodes**: A [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/) that references your model server image forces the kubelet to cache its layers on every GPU node before a pod is scheduled there. The next scale event finds the image already local and skips the 30 GB pull entirely.

@@ -6,10 +6,6 @@
 
 Each step in the startup sequence is sequential and slow. On a cold node with no cache, pulling a 30 GB image is slow even on high-speed networks; pull-through registries and node-local image caches reduce this, but without pre-warming, a new node still pays the full pull cost during a scale event, exactly when you need replicas up fast. Downloading 140 GB of FP16 weights from S3 or GCS adds another 2-3 minutes. Loading those weights into GPU memory is another 20-30 seconds. Engine warmup (JIT compilation, KV cache allocation) adds more on top. None of these steps overlap by default.
 
-Cold start hurts most when a traffic spike hits your model endpoint and capacity needs to expand fast, when your endpoint was idle and the first request has to wait for everything to load, or when you deploy a new model version and users hit timeouts during the switchover.
-
-There are two axes of attack. On the model side: smaller models, quantized weights (INT8/INT4), and distilled variants all load faster because there is simply less data to move. A 7B INT4 model fits in ~4 GB; a 70B FP16 model needs ~140 GB. That is a 35x difference in load time before you change a single line of infra config. On the infrastructure side: keep ready capacity pre-warmed, split weight loading from image loading, and cache aggressively at every layer so subsequent scale events pay much less.
-
 ```mermaid
 flowchart LR
     A[Server starts] --> B[Pull 30GB image<br/>~90s]
@@ -18,6 +14,10 @@ flowchart LR
     D --> E[Engine warmup<br/>~10s]
     E --> F[Ready<br/>~4 min total]
 ```
+
+Cold start hurts most when a traffic spike hits your model endpoint and capacity needs to expand fast, when your endpoint was idle and the first request has to wait for everything to load, or when you deploy a new model version and users hit timeouts during the switchover.
+
+There are two axes of attack. On the model side: smaller models, quantized weights (INT8/INT4), and distilled variants all load faster because there is simply less data to move. A 7B INT4 model fits in ~4 GB; a 70B FP16 model needs ~140 GB. That is a 35x difference in load time before you change a single line of infra config. On the infrastructure side: keep ready capacity pre-warmed, split weight loading from image loading, and cache aggressively at every layer so subsequent scale events pay much less.
 
 ## The primitives
 

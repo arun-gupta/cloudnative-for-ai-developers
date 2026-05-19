@@ -4,6 +4,20 @@
 
 ## The pattern
 
+```mermaid
+flowchart LR
+  subgraph Without["❌ Without (bare script)"]
+    A[python train.py] --> B[Hour 14: crash]
+    B --> C[Restart → Hour 0]
+  end
+
+  subgraph With["✅ With (Job + PVC)"]
+    D[kubectl apply job.yaml] --> E[Pod runs, writes checkpoints to PVC]
+    E --> F[Hour 14: crash]
+    F --> G[New Pod resumes from last checkpoint]
+  end
+```
+
 In cloud native, long-running compute is declared rather than invoked. You describe what you want (image, command, resources, retry policy, where state lives) and the platform owns running it to completion.
 
 ## The primitives

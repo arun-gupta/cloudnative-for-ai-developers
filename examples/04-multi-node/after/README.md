@@ -27,7 +27,7 @@ rendezvous succeeds. Training completes across two separate Kind nodes.
 ## 1. Create a multi-node Kind cluster
 
 ```bash
-kind create cluster --config kind-config.yaml
+kind create cluster --config kind-config.yaml --name kind
 ```
 
 This creates a cluster with one control-plane node and two worker nodes. The
@@ -298,10 +298,10 @@ To remove the Training Operator:
 kubectl delete -k "github.com/kubeflow/training-operator/manifests/overlays/standalone?ref=v1.8.1"
 ```
 
-To delete the Kind cluster:
+To delete the Kind cluster created for this example:
 
 ```bash
-kind delete cluster
+kind delete cluster --name kind
 ```
 
 ## How the pieces fit together

@@ -288,21 +288,28 @@ socket until the new worker connected.
 
 ## 7. Clean up
 
+Remove the PyTorchJob:
+
 ```bash
 kubectl delete -f pytorchjob.yaml
 ```
 
-To remove the Training Operator:
+Remove the Training Operator:
 
 ```bash
 kubectl delete -k "github.com/kubeflow/training-operator/manifests/overlays/standalone?ref=v1.8.1"
 ```
 
-To delete the Kind cluster created for this example:
+Delete the Kind cluster when you no longer need it:
 
 ```bash
 kind delete cluster --name kind
 ```
+
+> **Note:** Each example creates its own cluster. Example 04 uses a 3-node cluster
+> (1 control-plane + 2 workers). Other examples use a plain single-node cluster.
+> They are not interchangeable — delete this cluster before starting an example
+> that calls `kind create cluster` without `--config`.
 
 ## How the pieces fit together
 

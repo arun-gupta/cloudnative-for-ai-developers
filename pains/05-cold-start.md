@@ -41,18 +41,15 @@ flowchart LR
 
   ```mermaid
   flowchart LR
-      subgraph after["With init container"]
-          direction TB
-          I[Init container<br/>aws-cli / gcsfuse /<br/>HuggingFace hub] -->|weights staged to<br/>shared volume| S2[Server image<br/>serving code only]
-      end
-
-      subgraph before["Without init container"]
-          direction TB
-          S1[Server image<br/>serving code<br/>+ aws-cli<br/>+ S3 credentials<br/>+ download logic]
-      end
+      S1[Server image<br/>serving code<br/>+ aws-cli<br/>+ S3 credentials<br/>+ download logic]
   ```
 
   **With an [init container](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)** (a setup step that must complete before your model server starts), the download runs in a separate container that stages weights into a shared volume. The server starts only after the volume is ready. This gives you three things: guaranteed sequencing (the server never starts with a partial model load), failure isolation (a bad download stops the pod before it serves a single request), and a clean separation between fetching and serving. Your server image has no idea where the weights came from. Swap from S3 to GCS, or from your private bucket to HuggingFace Hub, by changing the init container only. The server image never changes and never needs cloud credentials embedded in it.
+
+  ```mermaid
+  flowchart LR
+      I[Init container<br/>aws-cli / gcsfuse /<br/>HuggingFace hub] -->|weights staged to<br/>shared volume| S2[Server image<br/>serving code only]
+  ```
 - **Warm pools and minimum replicas**: Setting `minReplicas` above zero on an [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) (Horizontal Pod Autoscaler — Kubernetes' built-in scale-out controller) keeps at least one ready instance of your model server alive at all times. For predictable traffic patterns, pair it with [KEDA's CronScaler](https://keda.sh/docs/2.13/scalers/cron/) (a scheduled autoscaler that adds capacity on a time-based schedule, before traffic arrives) to pre-scale before known peak hours. The key is headroom: keep `minReplicas` one or two above your steady-state need so a traffic spike is absorbed while a cold instance is still initializing.
 - **[KServe](https://kserve.github.io/website/) and serving-aware autoscalers** ([KEDA HTTP](https://github.com/kedacore/http-add-on), [Knative](https://knative.dev/docs/serving/)): these frameworks understand load-once, serve-many semantics. KServe's `InferenceService` supports a warm floor via `minReplicas` alongside optional scale-to-zero for cheaper models. It also holds incoming requests in a queue while a new pod initializes, so callers see latency rather than errors during a scale event.
 

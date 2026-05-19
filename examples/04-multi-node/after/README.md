@@ -41,10 +41,23 @@ kubectl get nodes
 ```
 
 ```
+NAME                 STATUS     ROLES           AGE   VERSION
+kind-control-plane   NotReady   control-plane   16s   v1.35.0
+kind-worker          NotReady   <none>           2s   v1.35.0
+kind-worker2         NotReady   <none>           2s   v1.35.0
+```
+
+Nodes start as `NotReady` while CNI initializes. Wait 30–60 seconds, then re-run until all show `Ready`:
+
+```bash
+kubectl get nodes
+```
+
+```
 NAME                 STATUS   ROLES           AGE   VERSION
-kind-control-plane   Ready    control-plane   30s   v1.31.x
-kind-worker          Ready    <none>          25s   v1.31.x
-kind-worker2         Ready    <none>          25s   v1.31.x
+kind-control-plane   Ready    control-plane   90s   v1.35.0
+kind-worker          Ready    <none>          76s   v1.35.0
+kind-worker2         Ready    <none>          76s   v1.35.0
 ```
 
 ## 2. Install the Training Operator

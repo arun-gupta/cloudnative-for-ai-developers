@@ -123,7 +123,7 @@ kubectl get pytorchjob dist-training
 
 ```
 NAME            STATE     AGE
-dist-training   Running   10s
+dist-training   Running   22s
 ```
 
 Confirm the pods landed on different nodes:
@@ -133,9 +133,9 @@ kubectl get pods -l training.kubeflow.org/job-name=dist-training -o wide
 ```
 
 ```
-NAME                     READY   STATUS    NODE          AGE
-dist-training-master-0   1/1     Running   kind-worker   12s
-dist-training-worker-0   1/1     Running   kind-worker2  12s
+NAME                     READY   STATUS    RESTARTS   AGE   IP            NODE           NOMINATED NODE   READINESS GATES
+dist-training-master-0   1/1     Running   0          22s   10.244.2.3    kind-worker    <none>           <none>
+dist-training-worker-0   1/1     Running   0          22s   10.244.1.2    kind-worker2   <none>           <none>
 ```
 
 The master and worker are on separate nodes. Traffic between them crosses Kind's
@@ -151,11 +151,18 @@ kubectl logs -f dist-training-master-0
 ```
 [rank 0] Starting. WORLD_SIZE=2 MASTER=dist-training-master-0:23456
 [rank 0] Opening rendezvous on :23456. Waiting up to 60s for 1 worker(s) ...
-[rank 0] Worker connected from ('10.244.1.3', 54321)
+[rank 0] Worker connected from ('10.244.1.2', 33094)
 [rank 0] All 2 rank(s) ready. Starting distributed training.
-[rank 0] epoch   0/10  loss=2.3000
-[rank 0] epoch   1/10  loss=1.8769
-...
+[rank 0] epoch  0/10  loss=2.3000
+[rank 0] epoch  1/10  loss=1.8134
+[rank 0] epoch  2/10  loss=1.4344
+[rank 0] epoch  3/10  loss=1.1392
+[rank 0] epoch  4/10  loss=0.9093
+[rank 0] epoch  5/10  loss=0.7303
+[rank 0] epoch  6/10  loss=0.5909
+[rank 0] epoch  7/10  loss=0.4823
+[rank 0] epoch  8/10  loss=0.3977
+[rank 0] epoch  9/10  loss=0.3319
 [rank 0] Training complete.
 ```
 
@@ -169,8 +176,16 @@ kubectl logs -f dist-training-worker-0
 [rank 1] Starting. WORLD_SIZE=2 MASTER=dist-training-master-0:23456
 [rank 1] Connecting to master at dist-training-master-0:23456 (timeout: 60s) ...
 [rank 1] Rendezvous complete. Starting distributed training.
-[rank 1] epoch   0/10  loss=2.3000
-...
+[rank 1] epoch  0/10  loss=2.3000
+[rank 1] epoch  1/10  loss=1.8134
+[rank 1] epoch  2/10  loss=1.4344
+[rank 1] epoch  3/10  loss=1.1392
+[rank 1] epoch  4/10  loss=0.9093
+[rank 1] epoch  5/10  loss=0.7303
+[rank 1] epoch  6/10  loss=0.5909
+[rank 1] epoch  7/10  loss=0.4823
+[rank 1] epoch  8/10  loss=0.3977
+[rank 1] epoch  9/10  loss=0.3319
 [rank 1] Training complete.
 ```
 
@@ -182,7 +197,19 @@ kubectl get pytorchjob dist-training
 
 ```
 NAME            STATE       AGE
-dist-training   Succeeded   45s
+dist-training   Succeeded   54s
+```
+
+Pods move to `Completed` status:
+
+```bash
+kubectl get pods -l training.kubeflow.org/job-name=dist-training -o wide
+```
+
+```
+NAME                     READY   STATUS      RESTARTS   AGE   IP           NODE           NOMINATED NODE   READINESS GATES
+dist-training-master-0   0/1     Completed   0          72s   10.244.2.3   kind-worker    <none>           <none>
+dist-training-worker-0   0/1     Completed   0          72s   10.244.1.2   kind-worker2   <none>           <none>
 ```
 
 ## 6. Simulate a worker failure

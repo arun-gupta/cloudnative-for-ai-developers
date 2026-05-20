@@ -14,8 +14,8 @@ COPY weights.txt /weights-source/weights.txt
 RUN useradd --create-home --shell /bin/bash server && chown -R server:server /app
 USER server
 
-# /model is mounted from the shared emptyDir volume at runtime.
+# /model is mounted from the shared PVC volume at runtime.
 # The init container populates it before this container starts.
 VOLUME ["/model"]
 
-CMD ["python", "server.py"]
+CMD ["python", "-u", "server.py"]

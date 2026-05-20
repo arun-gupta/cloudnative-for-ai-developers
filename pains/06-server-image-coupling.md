@@ -18,7 +18,10 @@ flowchart LR
     Coupled -->|starts| E[Downloads weights<br/>then serves]
 ```
 
-The coupling shows up as pain in two ways. First, operationally: you want to move weights to a new bucket, rotate an access key, or switch from S3 to GCS. None of that is a code change, but you rebuild the image anyway. Second, as a security smell: credentials inside an image get cached in your registry, your CI system, and on every node that ever pulled the image.
+The coupling shows up as pain in two ways:
+
+- **Operationally**: you want to move weights to a new bucket, rotate an access key, or switch from S3 to GCS. None of that is a code change, but you rebuild the image anyway.
+- **As a security smell**: credentials inside an image get cached in your registry, your CI system, and on every node that ever pulled the image.
 
 ## The primitives
 

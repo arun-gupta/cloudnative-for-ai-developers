@@ -25,6 +25,8 @@ The coupling shows up as pain in two ways:
 
 ## The primitives
 
+The fix is to break the single image into two responsibilities: one image that serves, one container that fetches. The serving image stays frozen across every weight source change. The fetch logic -- the download tool, the bucket URL, the credentials -- moves into an init container that runs once at pod startup, stages weights to a shared volume, and exits before the server starts. Credentials never touch the server image; they live in a Secret mounted only into the init container. The bucket URL lives in a ConfigMap, so switching sources is a config change, not a code change.
+
 ```mermaid
 flowchart LR
     subgraph Init["Init container (weight-downloader)"]

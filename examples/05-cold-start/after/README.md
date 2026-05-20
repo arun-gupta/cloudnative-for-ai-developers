@@ -127,6 +127,8 @@ The key is the shared `emptyDir` volume and the ordering guarantee:
 | `weights.txt` (142 bytes) | 70B FP16 weights (~140 GB) |
 | `shutil.copy2` | `aws s3 sync`, `gsutil cp`, or HuggingFace hub download |
 | `emptyDir` | PVC backed by local NVMe or shared storage (EFS, Filestore). A PVC persists across pod restarts so the init container only downloads weights once; `emptyDir` re-downloads on every restart. |
+
+> **Why `emptyDir` and not a PVC?** Kind has no default StorageClass for dynamic PVC provisioning, so a PVC would stay in `Pending` with no volume bound. `emptyDir` keeps the manifest runnable without extra setup. In production, swap `emptyDir` for a PVC backed by local NVMe so the init container only downloads weights once and subsequent restarts skip the download entirely.
 | Swap `downloader.py` | Swap init container image or entrypoint args |
 
 ---

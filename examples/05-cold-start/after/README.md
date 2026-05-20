@@ -126,7 +126,7 @@ The key is the shared `emptyDir` volume and the ordering guarantee:
 | `python:3.11-slim` base | vLLM or TGI base image |
 | `weights.txt` (142 bytes) | 70B FP16 weights (~140 GB) |
 | `shutil.copy2` | `aws s3 sync`, `gsutil cp`, or HuggingFace hub download |
-| `emptyDir` | PVC backed by local NVMe or shared storage (EFS, Filestore) |
+| `emptyDir` | PVC backed by local NVMe or shared storage (EFS, Filestore). A PVC persists across pod restarts so the init container only downloads weights once; `emptyDir` re-downloads on every restart. |
 | Swap `downloader.py` | Swap init container image or entrypoint args |
 
 ---

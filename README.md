@@ -59,18 +59,18 @@ flowchart LR
         N12[12. Data residency]
     end
     S1 --> S2 --> S3 --> S4 --> S5 --> S6
-    click N1 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/01-model-works-locally.md"
-    click N2 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/02-gpu-job-crashed.md"
-    click N3 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/03-cant-get-a-gpu.md"
-    click N4 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/04-multi-node-training.md"
-    click N5 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/05-cold-start.md"
-    click N6 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/06-server-image-coupling.md"
-    click N7 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/07-gpu-underutilized.md"
-    click N8 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/08-cant-roll-back.md"
-    click N9 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/09-latency-spiked.md"
-    click N10 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/10-costs-out-of-control.md"
-    click N11 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/11-prompt-version.md"
-    click N12 "https://github.com/arun-gupta/the-pain-first-way/blob/main/pains/12-data-residency.md"
+    click N1 "pains/01-model-works-locally.md"
+    click N2 "pains/02-gpu-job-crashed.md"
+    click N3 "pains/03-cant-get-a-gpu.md"
+    click N4 "pains/04-multi-node-training.md"
+    click N5 "pains/05-cold-start.md"
+    click N6 "pains/06-server-image-coupling.md"
+    click N7 "pains/07-gpu-underutilized.md"
+    click N8 "pains/08-cant-roll-back.md"
+    click N9 "pains/09-latency-spiked.md"
+    click N10 "pains/10-costs-out-of-control.md"
+    click N11 "pains/11-prompt-version.md"
+    click N12 "pains/12-data-residency.md"
 ```
 
 ## How to use this guide

@@ -100,6 +100,7 @@ The shift, in one line: invoke less, declare more.
 ## Reference
 
 - [The Rosetta table](reference/rosetta-table.md): one-to-one mappings between your world and cloud native
+- [CN primitives glossary](reference/cn-glossary.md): plain-language definitions for lower-level CN terms with no direct ML equivalent
 - [Where cloud native doesn't help](reference/where-cn-doesnt-help.md): honest scope statement on what this guide doesn't cover
 - [What not to translate](reference/what-not-to-translate.md): cloud native dogma that bends or breaks for AI workloads
 - [Reading path](reference/reading-path.md): five things to actually touch, in order

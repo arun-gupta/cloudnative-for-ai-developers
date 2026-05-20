@@ -14,7 +14,7 @@ For the parts of cloud native that genuinely map one-to-one to something you alr
 | Local model files on disk | Durable storage that survives the pod | PersistentVolume / PVC |
 | "Restart if it dies" | Self-healing replicas | ReplicaSet / Deployment |
 
-The table covers what cleanly maps. The [pain sections](../README.md#the-pains) cover what doesn't.
+The table covers what cleanly maps. The [pain sections](../README.md#the-pains) cover what doesn't. For lower-level CN terms with no direct ML equivalent, see the [CN primitives glossary](cn-glossary.md).
 
 ---
 

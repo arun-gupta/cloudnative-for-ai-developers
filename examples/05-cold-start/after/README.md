@@ -2,8 +2,6 @@
 
 `server.py` reads weights from `/model/weights.txt` and has no idea where they came from. `downloader.py` is the init container entrypoint: it stages the weights before the server starts. The server image contains serving code only.
 
-Swap `downloader.py` to change the source (S3, GCS, HuggingFace Hub). The server image never changes.
-
 ## Prerequisites
 
 - [Docker](https://docs.docker.com/get-docker/) (tested with 29+)

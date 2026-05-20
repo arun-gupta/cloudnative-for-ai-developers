@@ -8,6 +8,10 @@ The demo uses a local file copy to simulate the download (no network required). 
 
 ## Run it
 
+```bash
+cd examples/05-cold-start/before
+```
+
 No dependencies beyond the standard library.
 
 ```bash

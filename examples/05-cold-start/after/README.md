@@ -2,6 +2,12 @@
 
 `server.py` reads weights from `/model/weights.txt` and has no idea where they came from. `downloader.py` is the init container entrypoint: it stages the weights before the server starts. The server image contains serving code only.
 
+## 0. Navigate to this directory
+
+```bash
+cd examples/05-cold-start/after
+```
+
 ## Prerequisites
 
 - [Docker](https://docs.docker.com/get-docker/) (tested with 29+)

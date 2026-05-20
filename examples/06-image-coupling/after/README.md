@@ -1,0 +1,199 @@
+# After: source URL in a ConfigMap, credentials in a Secret
+
+`server.py` is serving code only. `downloader.py` is the init container entrypoint: it reads `WEIGHTS_SOURCE` from a ConfigMap and `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` from a Secret, stages the weights to a shared volume, and exits before the server starts. Neither value is in the image.
+
+## 0. Navigate to this directory
+
+```bash
+cd examples/06-image-coupling/after
+```
+
+## Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) (tested with 29+)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [kind CLI](https://kind.sigs.k8s.io/docs/user/quick-start/#installation)
+
+## 1. Create a Kind cluster
+
+```bash
+kind create cluster --name kind 2>/dev/null || echo "Cluster already exists, reusing it."
+```
+
+## 2. Build and load the image
+
+```bash
+chmod +x build.sh && ./build.sh
+```
+
+This builds the Docker image (containing `server.py` and `downloader.py`) and loads it into Kind. No registry needed.
+
+## 3. Apply the ConfigMap and Secret
+
+```bash
+kubectl apply -f configmap.yaml -f secret.yaml
+```
+
+Inspect what was created:
+
+```bash
+kubectl get configmap model-config -o yaml
+kubectl get secret model-credentials -o yaml
+```
+
+The Secret values are base64-encoded in etcd. They are not in the image.
+
+## 4. Apply the pod manifest
+
+```bash
+kubectl apply -f pod.yaml
+```
+
+## 5. Watch the init container run first
+
+```bash
+kubectl get pod inference-server -w
+```
+
+```
+NAME               READY   STATUS       RESTARTS   AGE
+inference-server   0/1     Init:0/1     0          2s
+inference-server   0/1     PodInitializing   0     4s
+inference-server   1/1     Running      0          5s
+```
+
+Press `Ctrl+C` once the pod shows `Running`.
+
+## 6. Check the init container logs
+
+```bash
+kubectl logs inference-server -c weight-downloader
+```
+
+```
+[downloader] WEIGHTS_SOURCE=s3://my-model-bucket/llm-v1/weights.txt (from ConfigMap)
+[downloader] AWS_ACCESS_KEY_ID=AKIAIOS... (from Secret, not from image)
+[downloader] Staging weights to /model/weights.txt ...
+[downloader] Done in 0.001s (142 bytes). Weights ready at /model/weights.txt.
+```
+
+The init container received both values from the cluster. Neither was baked into the image.
+
+## 7. Check the server logs
+
+```bash
+kubectl logs inference-server
+```
+
+```
+[startup] Weights loaded from /model/weights.txt. Preview: these are fake model weights...
+[startup] (No source URL or credentials in this image.)
+[ready] Inference server listening on port 8080
+```
+
+## 8. Test the endpoint
+
+In one terminal, start the port-forward:
+
+```bash
+kubectl port-forward pod/inference-server 8080:8080
+```
+
+In another:
+
+```bash
+curl http://localhost:8080/health
+curl http://localhost:8080/predict
+```
+
+```
+ok
+prediction using model: [these are fake model weights
+layer_0: 0.312 0.847 0.193 0.65...]
+```
+
+## 9. Simulate a key rotation (no image rebuild)
+
+Update the Secret with a new key value, then delete and recreate the pod. The image does not change.
+
+```bash
+kubectl create secret generic model-credentials \
+  --from-literal=AWS_ACCESS_KEY_ID=AKIAI99999NEWKEY \
+  --from-literal=AWS_SECRET_ACCESS_KEY=newSecretValue/K7MDENG \
+  --dry-run=client -o yaml | kubectl apply -f -
+
+kubectl delete pod inference-server
+kubectl apply -f pod.yaml
+```
+
+Check the init container logs again:
+
+```bash
+kubectl logs inference-server -c weight-downloader
+```
+
+```
+[downloader] AWS_ACCESS_KEY_ID=AKIAI999... (from Secret, not from image)
+[downloader] /model/weights.txt already present (142 bytes). Skipping download.
+```
+
+The new key was picked up without touching the image.
+
+## 10. Simulate a source change (no image rebuild)
+
+Update the ConfigMap to point to a different bucket, then recycle the pod:
+
+```bash
+kubectl patch configmap model-config \
+  --patch '{"data":{"WEIGHTS_SOURCE":"s3://my-model-bucket-v2/llm-v2/weights.txt"}}'
+
+kubectl delete pod inference-server
+kubectl delete pvc model-weights   # clear the cached weights so the new source is used
+kubectl apply -f pod.yaml
+```
+
+```bash
+kubectl logs inference-server -c weight-downloader
+```
+
+```
+[downloader] WEIGHTS_SOURCE=s3://my-model-bucket-v2/llm-v2/weights.txt (from ConfigMap)
+[downloader] Staging weights to /model/weights.txt ...
+```
+
+New source, same image.
+
+## 11. Clean up
+
+```bash
+kubectl port-forward  # Ctrl+C in that terminal first
+kubectl delete pod inference-server
+kubectl delete pvc model-weights
+kubectl delete configmap model-config
+kubectl delete secret model-credentials
+```
+
+## What the manifest demonstrates
+
+| Concern | Lives in |
+|---|---|
+| Serving logic | Server image -- built once, never changes for operational reasons |
+| Download tool | Same image, run as init container via `command` override |
+| Source URL | ConfigMap `model-config` -- change with `kubectl apply`, no rebuild |
+| Credentials | Secret `model-credentials` -- rotate without touching the image |
+
+The server container spec has no `env` entries at all. It cannot read the credentials even if it tried.
+
+## What this maps to on a real GPU cluster
+
+| This demo | Real inference server |
+|---|---|
+| `python:3.11-slim` base | vLLM or TGI base image |
+| `weights.txt` (142 bytes) | 70B FP16 weights (~140 GB) |
+| `shutil.copy2` | `aws s3 sync`, `gsutil cp`, or HuggingFace hub download |
+| `stringData` in `secret.yaml` | Values sourced from AWS Secrets Manager or GCP Secret Manager via External Secrets Operator |
+| Manual `kubectl patch` for source change | GitOps PR updating the ConfigMap, applied by Argo CD or Flux |
+
+---
+
+[← Back to Pain 6](../../pains/06-server-image-coupling.md) · [Landscape](../../README.md) · [Examples index](../README.md)

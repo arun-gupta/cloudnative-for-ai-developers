@@ -62,30 +62,7 @@ The resulting split:
 
 ## Try it
 
-```bash
-cd examples/06-image-coupling
-```
-
-**Before** (no Docker or Kubernetes needed):
-
-```bash
-cd before && python3 server.py
-```
-
-Watch the startup logs -- the hardcoded key and source URL are printed on every start. To rotate the key or change the bucket, you edit `server.py` and rebuild.
-
-**After** (requires Docker, kubectl, kind):
-
-```bash
-cd after
-./build.sh
-kubectl apply -f configmap.yaml -f secret.yaml -f pod.yaml
-kubectl logs inference-server -c weight-downloader
-```
-
-The init container logs show `WEIGHTS_SOURCE` and `AWS_ACCESS_KEY_ID` arriving from the cluster, not from the image. The server container has no `env` entries at all.
-
-See [`examples/06-image-coupling/after/README.md`](../examples/06-image-coupling/after/README.md) for the full walkthrough, including steps to simulate a key rotation and a source change without rebuilding the image.
+A working demonstration lives in [`examples/06-image-coupling/`](../examples/06-image-coupling/). The before case runs without Docker or Kubernetes and shows the hardcoded source URL and credentials printed on every startup. The after case uses an init container, a ConfigMap, and a Secret to decouple them from the image; the walkthrough includes steps to simulate a key rotation and a source change without rebuilding. Runnable on a Mac with a local Kind cluster and no GPU required.
 
 ---
 

@@ -4,6 +4,27 @@
 
 ## The pattern
 
+**Without cloud native (bare script)**
+
+```mermaid
+flowchart LR
+  A[python train.py] --> B[Hour 14: process dies]
+  B --> C[No checkpoint → restart from scratch]
+```
+
+The process owns its own lifecycle. When it dies, so does your progress.
+
+**With cloud native (Job + PVC)**
+
+```mermaid
+flowchart LR
+  A[kubectl apply job.yaml] --> B[Pod runs, writes checkpoints to PVC]
+  B --> C[Hour 14: pod dies]
+  C --> D[New pod starts, resumes from last checkpoint]
+```
+
+The platform owns the lifecycle. Checkpoints survive pod death; the next run picks up where the last one stopped.
+
 In cloud native, long-running compute is declared rather than invoked. You describe what you want (image, command, resources, retry policy, where state lives) and the platform owns running it to completion.
 
 ## The primitives

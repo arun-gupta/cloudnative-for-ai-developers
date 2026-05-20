@@ -51,6 +51,8 @@ inference-server   0/1     PodInitializing   0   4s
 inference-server   1/1     Running    0          5s
 ```
 
+Press `Ctrl+C` once the pod shows `Running` to return to the prompt.
+
 The init container ran `downloader.py`, staged the weights to the shared volume, and exited. Only then did the server container start.
 
 ## 5. Check the init container logs

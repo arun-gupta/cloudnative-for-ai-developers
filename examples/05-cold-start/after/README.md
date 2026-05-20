@@ -12,8 +12,10 @@ Swap `downloader.py` to change the source (S3, GCS, HuggingFace Hub). The server
 
 ## 1. Create a Kind cluster
 
+If you already have a Kind cluster named `kind` from a previous example, you can skip this step.
+
 ```bash
-kind create cluster --name kind
+kind create cluster --name kind 2>/dev/null || echo "Cluster already exists, reusing it."
 ```
 
 ## 2. Build and load the image
